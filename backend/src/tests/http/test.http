@@ -1,0 +1,10 @@
+GET http://localhost:3010/
+
+###
+
+POST http://localhost:3010/
+Content-Type: application/json
+
+{
+    "title": "bouh"
+}
