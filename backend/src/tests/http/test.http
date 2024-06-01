@@ -1,3 +1,4 @@
+
 GET http://localhost:3010/
 
 ###
@@ -8,3 +9,33 @@ Content-Type: application/json
 {
     "title": "bouh"
 }
+
+
+###
+
+GET http://localhost:3010/movies/count
+Content-Type: text/plain
+
+###
+
+GET http://localhost:3010/movies/totalBudget
+Content-Type: text/plain
+
+###
+
+GET http://localhost:3010/movies
+
+###
+
+GET http://localhost:3010/movies?minYear=2008
+Content-Type: text/plain
+
+###
+
+GET http://localhost:3010/movies?reqTime=11:00,16:00
+Content-Type: text/plain
+
+###
+
+GET http://localhost:3010/movies?minYear=2008&reqTime=11:00,16:00
+Content-Type: text/plain

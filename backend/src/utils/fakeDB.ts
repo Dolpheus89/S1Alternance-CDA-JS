@@ -1,3 +1,38 @@
+import fs from "fs"
+import parser from "csv-parser"
+
+
+export const readCSVFile = (): Promise<any[]> => {
+  const filePath = "../../movies.csv";
+
+  return new Promise((resolve, reject) => {
+    if (!fs.existsSync(filePath)) {
+      return reject(new Error(`${filePath} not found`));
+    }
+
+    let results: any[] = [];
+
+    fs.createReadStream(filePath)
+      .pipe(parser({
+        separator: ";"
+      }))
+      .on('data', (row) => results.push({
+        ID: parseInt(row.ID),
+        Titre: row.Titre,
+        Année: parseInt(row['Année(s)']),
+        Prix: parseFloat(row.Prix),
+        Horaires: row.Horaires.split(',')
+      }))
+      .on('end', () => {
+        console.log('CSV file successfully processed');
+        resolve(results);
+      })
+      .on('error', (error) => {
+        reject(error);
+      });
+  });
+};
+
 export const ads = [
     {
       id: 1,

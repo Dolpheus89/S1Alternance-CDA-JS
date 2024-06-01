@@ -1,4 +1,4 @@
-import {ads} from "../utils/db"
+import {ads} from "../utils/fakeDB"
 
 export interface Ad {
     id: number,
