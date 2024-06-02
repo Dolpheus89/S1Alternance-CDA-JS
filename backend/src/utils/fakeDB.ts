@@ -3,7 +3,7 @@ import parser from "csv-parser"
 
 
 export const readCSVFile = (): Promise<any[]> => {
-  const filePath = "../../movies.csv";
+  const filePath = "./movies.csv";
 
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(filePath)) {
@@ -19,9 +19,9 @@ export const readCSVFile = (): Promise<any[]> => {
       .on('data', (row) => results.push({
         ID: parseInt(row.ID),
         Titre: row.Titre,
-        Année: parseInt(row['Année(s)']),
+        Année: parseInt(row['Année']),
         Prix: parseFloat(row.Prix),
-        Horaires: row.Horaires.split(',')
+        Horaires: row.Horaires.split(",")
       }))
       .on('end', () => {
         console.log('CSV file successfully processed');
@@ -33,7 +33,23 @@ export const readCSVFile = (): Promise<any[]> => {
   });
 };
 
-export let ads = [
+export const writeOnCSVFile = (data: string): Promise<void> => {
+  const filePath = "./movies.csv";
+  return new Promise((resolve, reject) => {
+      fs.writeFile(filePath, data, (err) => {
+          if (err) {
+              console.log(err);
+              return reject(err);
+          }
+          console.log("File written successfully");
+          resolve();
+      });
+  });
+};
+
+
+
+export const ads = [
     {
       id: 1,
       title: "Bike to sell",

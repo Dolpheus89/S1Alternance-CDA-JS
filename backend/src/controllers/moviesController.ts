@@ -34,3 +34,13 @@ export const getFilteredMovie = async (req:Request, res:Response) => {
     }
     
 }
+
+export const postMovie = async (req:Request, res:Response)=> {
+    try {
+        const { Titre,Année,Prix, Horaires, } = req.body
+        const newMovie = await moviesModel.addMovie(Titre,Année,Prix,Horaires)
+        res.status(201).json(newMovie);
+    } catch(err){
+        res.status(500).json({message: "Failed to add movie"})
+    }
+    }

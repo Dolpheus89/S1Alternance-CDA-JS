@@ -8,5 +8,7 @@ router.get("/" , moviesControllers.getFilteredMovie)
 router.get("/count" , moviesControllers.getAllCount)
 router.get("/totalBudget" , moviesControllers.getAllPrice)
 
+router.post("/",moviesControllers.postMovie)
+
 
 export default router
