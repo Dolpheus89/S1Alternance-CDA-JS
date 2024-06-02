@@ -33,7 +33,7 @@ export const readCSVFile = (): Promise<any[]> => {
   });
 };
 
-export const ads = [
+export let ads = [
     {
       id: 1,
       title: "Bike to sell",

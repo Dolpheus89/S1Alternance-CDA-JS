@@ -1,3 +1,6 @@
+//Use "REST Client" Extension for this file.
+
+//Ads
 
 GET http://localhost:3010/
 
@@ -7,11 +10,30 @@ POST http://localhost:3010/
 Content-Type: application/json
 
 {
-    "title": "bouh"
+    "description": "bouh !"
 }
 
+###
+
+PUT http://localhost:3010/2
+Content-Type: application/json
+
+{
+    "title": "Un coup, quatre trous",
+    "description": "combat de fourchette",
+    "price": 150,
+    "picture": "fourchette.jpg",
+    "location": "Remote",
+    "createdAt": "2024-06-02T13:04:01.869Z"
+}
 
 ###
+
+DELETE http://localhost:3010/1
+
+###
+
+//Movies
 
 GET http://localhost:3010/movies/count
 Content-Type: text/plain
