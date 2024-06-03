@@ -1,9 +1,9 @@
 import fs from "fs"
 import parser from "csv-parser"
 
+const filePath = "./movies.csv";
 
 export const readCSVFile = (): Promise<any[]> => {
-  const filePath = "./movies.csv";
 
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(filePath)) {
@@ -34,7 +34,6 @@ export const readCSVFile = (): Promise<any[]> => {
 };
 
 export const writeOnCSVFile = (data: string): Promise<void> => {
-  const filePath = "./movies.csv";
   return new Promise((resolve, reject) => {
       fs.writeFile(filePath, data, (err) => {
           if (err) {
@@ -46,6 +45,15 @@ export const writeOnCSVFile = (data: string): Promise<void> => {
       });
   });
 };
+
+export const csvConverter = (array:any[],header:string):string => {
+  const data = array.map(movie =>
+      `${movie.ID};${movie.Titre};${movie.Année};${movie.Prix};${movie.Horaires.join(',')}`
+  ).join('\n');
+  const csvData = `${header}\n${data}`;
+
+  return csvData
+}
 
 
 

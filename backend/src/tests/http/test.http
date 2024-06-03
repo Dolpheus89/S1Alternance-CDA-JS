@@ -73,3 +73,20 @@ Content-Type: application/json
     "Prix": 49,
     "Horaires":["16:00","21:00"]
 }
+
+###
+
+PUT http://localhost:3010/movies/181
+Content-Type: application/json
+
+{
+    "Titre": "Un coup, quatre trous",
+    "Année": 2013,
+    "Prix": 29,
+    "Horaires":["17:00","22:00"]
+}
+
+
+###
+// Ajout de ',' pour supprimer plusieurs elements .
+DELETE  http://localhost:3010/movies/188,189

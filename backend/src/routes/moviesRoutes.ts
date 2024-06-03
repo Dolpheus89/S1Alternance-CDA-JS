@@ -10,5 +10,9 @@ router.get("/totalBudget" , moviesControllers.getAllPrice)
 
 router.post("/",moviesControllers.postMovie)
 
+router.put("/:id",moviesControllers.updateMovie)
+
+router.delete("/:ids",moviesControllers.removeMovie)
+
 
 export default router

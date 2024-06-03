@@ -1,4 +1,4 @@
-import { readCSVFile, writeOnCSVFile } from "../utils/fakeDB";
+import { csvConverter, readCSVFile, writeOnCSVFile } from "../utils/fakeDB";
 
 export interface Movie {
     ID: number,
@@ -7,17 +7,14 @@ export interface Movie {
     Prix: number,
     Horaires: string[],
 }
-
-const fetchMovies = async():Promise<Movie[]> => {
-    return await readCSVFile()
-}
+const header = "ID;Titre;Année;Prix;Horaires";
 
 export const countMovies = async ():Promise<number> => {
-    return (await fetchMovies()).length
+    return (await readCSVFile()).length
 }
 
 export const getPriceForAll = async ():Promise<number> => {
-    return (await fetchMovies()).reduce((total, moviePrice) => total + moviePrice.Prix,0)
+    return (await readCSVFile()).reduce((total, moviePrice) => total + moviePrice.Prix,0)
 }
 
 
@@ -27,18 +24,18 @@ export const filteredMovie = async(minYear:number | "default", reqTime:string[] 
 
 
     if(minYear !== "default" && reqTime === "default"){
-        result = (await fetchMovies()).filter(movie => 
+        result = (await readCSVFile()).filter(movie => 
             movie.Année >= minYear )
     } else if (minYear === "default" && reqTime !== "default"){
-        result = (await fetchMovies()).filter( movie =>
-            movie.Horaires.some(time => reqTime.includes(time)))
+        result = (await readCSVFile()).filter( movie =>
+            movie.Horaires.some((time: string) => reqTime.includes(time)))
     } else if (minYear !== "default" && reqTime !== "default"){
-        result = (await fetchMovies()).filter(movie =>
+        result = (await readCSVFile()).filter(movie =>
             movie.Année >= minYear
             &&
-            movie.Horaires.some(time => reqTime.includes(time)))
+            movie.Horaires.some((time: string) => reqTime.includes(time)))
     } else {
-        result = await fetchMovies()
+        result = await readCSVFile()
     }
     
 
@@ -46,7 +43,7 @@ export const filteredMovie = async(minYear:number | "default", reqTime:string[] 
 }
 
 export const addMovie = async (Titre: string, Année: number, Prix: number, Horaires: string[]): Promise<Movie> => {
-    const movies = await fetchMovies();
+    const movies = await readCSVFile();
 
     const newMovie: Movie = {
         ID: movies.length > 0 ? movies[movies.length - 1].ID + 1 : 1,
@@ -58,17 +55,65 @@ export const addMovie = async (Titre: string, Année: number, Prix: number, Hora
 
     movies.push(newMovie);
 
-    const header = "ID;Titre;Année;Prix;Horaires";
-    const data = movies.map(movie =>
-        `${movie.ID};${movie.Titre};${movie.Année};${movie.Prix};${movie.Horaires.join(',')}`
-    ).join('\n');
-    const csvData = `${header}\n${data}`;
+    const csvData = csvConverter(movies,header)
 
     await writeOnCSVFile(csvData);
 
-    console.log("Movies after writing to CSV:", movies);
     
     return newMovie;
 };
 
+export const putMovie = async (
+    ID: number,
+    Titre: string,
+    Année: number, 
+    Prix: number, 
+    Horaires: string[]): Promise<Movie[]> => {
 
+    const movies = await readCSVFile()
+    const findID = movies.filter((element) => element.ID === ID)
+
+    if(findID.length === 1){
+
+        for (let element in findID){
+            if (Titre !== undefined){ findID[element].Titre = Titre}
+            if (Année !== undefined){ findID[element].Année = Année}
+            if (Prix !== undefined){ findID[element].Prix = Prix}
+            if (Horaires !== undefined){ findID[element].Horaires = Horaires}
+        }
+
+        const csvData = csvConverter(movies, header)
+        await writeOnCSVFile(csvData);
+    
+        return findID
+    }
+
+    return []
+}
+
+
+export const deleteMovie = async(ids:number[]):Promise<Movie[]>=> {
+    const movies = await readCSVFile()
+    let deletedID:Movie[] = []
+
+    if (ids.length !== 0) {
+        for (const id of ids){
+            movies.filter((element,index) => {
+                if(element.ID === id){
+                    deletedID.push(element)
+                    movies.splice(index,1)
+                }
+            })
+        }
+
+    const csvData = csvConverter(movies, header)
+    await writeOnCSVFile(csvData);
+    console.log(deletedID);
+    
+    return deletedID
+
+    }
+
+    return []
+}
+   
