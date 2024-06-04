@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as moviesModel from "../models/moviesModel"
 
-export const getAllCount =async (req:Request,res:Response) => {
+export const getAllCount = async (req:Request,res:Response) => {
     try {
         const movies = await moviesModel.countMovies()
         res.json(movies)
@@ -10,7 +10,7 @@ export const getAllCount =async (req:Request,res:Response) => {
     }
 }
 
-export const getAllPrice =async (req:Request,res:Response) => {
+export const getAllPrice = async (req:Request,res:Response) => {
     try {
         const movies = await moviesModel.getPriceForAll()
         res.json(movies)

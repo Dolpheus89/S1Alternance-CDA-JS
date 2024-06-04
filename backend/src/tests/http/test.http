@@ -1,21 +1,38 @@
-//Use "REST Client" Extension for this file.
+//Use "REST Client" and SQLite Extensions for this file.
 
 //Ads
 
-GET http://localhost:3010/
+GET http://localhost:3010/ads
+// Get ALL ads
+
+###
+GET http://localhost:3010/ads/?location=Bordeaux
+//Get all ads where location = query 
+
+###
+GET http://localhost:3010/ads/AVGPrice/
+//Get avg price where location = params
+
+###
+GET http://localhost:3010/ads/AVGPrice/?location=Paris
+//Get avg price where location = params
 
 ###
 
-POST http://localhost:3010/
+POST http://localhost:3010/ads/
 Content-Type: application/json
 
 {
-    "description": "bouh !"
+    "title": "Le Saint Graal des canapés",
+    "description": "Ce canapé a été béni par le Pape lui-même et a des pouvoirs de guérison. Il est également incroyablement confortable et parfait pour les soirées Netflix.",
+    "price": 1000000,
+    "picture": "saint-graal-canape.jpg",
+    "location": "Vatican City"
 }
 
 ###
 
-PUT http://localhost:3010/2
+PUT http://localhost:3010/ads/2
 Content-Type: application/json
 
 {
@@ -24,12 +41,21 @@ Content-Type: application/json
     "price": 150,
     "picture": "fourchette.jpg",
     "location": "Remote",
-    "createdAt": "2024-06-02T13:04:01.869Z"
+    "createdAt": "2024-06-02"
 }
 
 ###
 
-DELETE http://localhost:3010/1
+PUT http://localhost:3010/ads/0/01092023
+// change price with params  /:price/:date
+
+###
+
+DELETE http://localhost:3010/ads/?price=40
+// Delete row with price > Value
+###
+DELETE http://localhost:3010/ads/?id=1
+// Delete row with id
 
 ###
 
