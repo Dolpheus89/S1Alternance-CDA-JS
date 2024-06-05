@@ -21,20 +21,44 @@ export const getLocationPriceAVG = async (req:Request, res:Response) => {
     }
 }
 
+export const getCatPriceAVG = async (req:Request, res:Response) => {
+    try {
+        const category = req.query.category as string
+        const cat = await adsModel.getAvgPriceCategory(category)
+
+        res.json(cat)
+    } catch (err) {
+        res.status(500).json({message: `Failed to catch argument ${err}`})
+    }
+}
+
+export const getCategoryAds = async (req: Request,res:Response) => {
+    try {
+        const cat1 = req.query.cat1 as string
+        const cat2 = req.query.cat2 as string | undefined
+
+        const result = await adsModel.getAdsByCategory(cat1,cat2)
+        res.json(result)
+    } catch (err) {
+        res.status(500).json({message: `Failed to catch argument ${err}`})
+    }
+}
+
 export const create = async (req:Request , res:Response) => {
     try {
-        const { title, description, owner, price, picture, location} = req.body
-        await adsModel.postAds(title, description, owner, price, picture, location )
+        const { title, description, owner, price, picture, location,category} = req.body
+        const convertedCategory = await adsModel.convertCategory(category)
+        await adsModel.postAds(title, description, owner, price, picture, location,convertedCategory )
         res.status(202).send('new ad created')
     }catch(err){
-        res.status(500).json({message: "Failed to create ads"})
+        res.status(500).json({message: "Failed to create ads" + (err)})
     }
 }
 
 export const update = async (req:Request , res:Response) => {
     try {
         const id = parseInt(req.params.id)
-        const allowedProperties = ["title", "description", "owner", "price", "picture", "location"];
+        const allowedProperties = ["title", "description", "owner", "price", "picture", "location","category_id"];
         const updatedAdData = Object.fromEntries(
             Object.entries(req.body).filter(([key]) => allowedProperties.includes(key))
           );

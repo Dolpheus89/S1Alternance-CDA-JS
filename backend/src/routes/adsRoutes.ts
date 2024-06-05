@@ -5,6 +5,8 @@ const router = (Router())
 
 router.get("/", adsControllers.getLocation)
 router.get("/AVGPrice/", adsControllers.getLocationPriceAVG)
+router.get("/AVGPriceCat/", adsControllers.getCatPriceAVG)
+router.get("/categories/", adsControllers.getCategoryAds)
 
 router.post("/", adsControllers.create)
 

@@ -1,7 +1,5 @@
 //Use "REST Client" and SQLite Extensions for this file.
 
-//Ads
-
 GET http://localhost:3010/ads
 // Get ALL ads
 
@@ -11,12 +9,25 @@ GET http://localhost:3010/ads/?location=Bordeaux
 
 ###
 GET http://localhost:3010/ads/AVGPrice/
-//Get avg price where location = params
+//Get avg price for all locations
 
 ###
 GET http://localhost:3010/ads/AVGPrice/?location=Paris
-//Get avg price where location = params
+//Get avg price where location = query
 
+###
+GET http://localhost:3010/ads/categories/?cat1=v
+//Get filtered Add by category where cat1 start with query 
+
+###
+GET http://localhost:3010/ads/categories/?cat1=vêt&cat2=au
+//Get filtered Add by category where cat1 and cat 2 start with query 
+###
+GET http://localhost:3010/ads/AVGPriceCat/
+////Get avg price by category for all categories
+###
+GET http://localhost:3010/ads/AVGPriceCat/?category=v
+////Get avg price by category where category = query 
 ###
 
 POST http://localhost:3010/ads/
@@ -27,7 +38,8 @@ Content-Type: application/json
     "description": "Ce canapé a été béni par le Pape lui-même et a des pouvoirs de guérison. Il est également incroyablement confortable et parfait pour les soirées Netflix.",
     "price": 1000000,
     "picture": "saint-graal-canape.jpg",
-    "location": "Vatican City"
+    "location": "Vatican City",
+    "category": "catapulte" 
 }
 
 ###
@@ -41,7 +53,9 @@ Content-Type: application/json
     "price": 150,
     "picture": "fourchette.jpg",
     "location": "Remote",
-    "createdAt": "2024-06-02"
+    "createdAt": "2024-06-02",
+    "category_id": 3
+
 }
 
 ###
@@ -59,60 +73,3 @@ DELETE http://localhost:3010/ads/?id=1
 
 ###
 
-//Movies
-
-GET http://localhost:3010/movies/count
-Content-Type: text/plain
-
-###
-
-GET http://localhost:3010/movies/totalBudget
-Content-Type: text/plain
-
-###
-
-GET http://localhost:3010/movies
-
-###
-
-GET http://localhost:3010/movies?minYear=2008
-Content-Type: text/plain
-
-###
-
-GET http://localhost:3010/movies?reqTime=11:00,16:00
-Content-Type: text/plain
-
-###
-
-GET http://localhost:3010/movies?minYear=2008&reqTime=11:00,16:00
-Content-Type: text/plain
-
-###
-
-POST http://localhost:3010/movies
-Content-Type: application/json
-
-{
-    "Titre": "Le reve d'un poulet",
-    "Année": 1989,
-    "Prix": 49,
-    "Horaires":["16:00","21:00"]
-}
-
-###
-
-PUT http://localhost:3010/movies/181
-Content-Type: application/json
-
-{
-    "Titre": "Un coup, quatre trous",
-    "Année": 2013,
-    "Prix": 29,
-    "Horaires":["17:00","22:00"]
-}
-
-
-###
-// Ajout de ',' pour supprimer plusieurs elements .
-DELETE  http://localhost:3010/movies/188,189
