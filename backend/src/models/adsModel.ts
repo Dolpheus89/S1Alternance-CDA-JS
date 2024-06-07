@@ -1,226 +1,147 @@
-import { db } from '../utils/dbConfig';
+import { dsc } from "../utils/dbConfig";
+import { Ads } from "../entities/Ads";
+import { Categories } from "../entities/Categories";
 
-export interface Ad {
-    title: string,
-    description: string,
-    owner: string,
-    price: number,
-    picture: string,
-    location: string,
-    createdAt: string,
-    category_id:number
-  }
 
-  interface Category {
-    id: number;
-    name: string;
-  }
-
-  export const getLocationAds = async (location?: string): Promise<Ad[]> => {
-    return new Promise((resolve, reject) => {
-      let query = "SELECT * FROM ad";
-      let params: string[] = [];
-  
-      if (location) {
-        query += " WHERE location = ?";
-        params.push(location);        
-      }
-  
-      db.all(query, params, (err: Error | null, rows) => {
-        if (err) {
-          reject(err);
+  export const getLocationAds = async (location?: string):Promise<Ads[]> => {
+        const ads = await dsc.manager.find(Ads, {
+          where: {location},
+          relations: {category:true}
+        })      
+ 
+        if(ads.length === 0){
+          throw new Error("no Ads find with this location")
         } else {
-          resolve(rows as Ad[]);
+          return(ads)
         }
-      });
-    });
   };
   
-  export const getAveragePrice = async (location?: string): Promise<number[]> => {
-    return new Promise((resolve, reject) => {
-        
-        let query = "SELECT location, AVG(price) FROM ad"
-        let params: string[] = [];
+  export const getAveragePrice = async (location?: string): Promise<Ads[]> => {
+    const queryBuilder = dsc
+        .getRepository(Ads)
+        .createQueryBuilder("ad")
+        .select("ad.location")
+        .addSelect("ROUND(AVG(ad.price), 2)", "avgPrice")
+        .groupBy("ad.location");
 
-        if(location){
-            query += " WHERE location = ?"
-            params.push(location)
-        }
+    if (location) {
+        queryBuilder.where(`ad.location = :location`, { location: `${location}` });
+    }
 
-            query += " GROUP BY location"
+    const ads = await queryBuilder.getRawMany();
 
-        db.all(query,params,(err:Error | null, rows) => {
-            if (err) {
-                reject(err);
-              } else {
-                resolve(rows as number[]);
-              }
-        })
-    })
+      if(ads.length === 0){
+        throw new Error("no Ads find with this location")
+      } else {
+        return(ads)
+      }
   }
 
-  export const getAdsByCategory = async (cat1: string,cat2?: string):Promise<any[]> => {
-    return new Promise((resolve, reject) => {
-        let query = `SELECT title, description, owner, price, picture, location, cat.name AS category_name
-        FROM ad
-        INNER JOIN categories AS cat ON cat.id = ad.category_id
-        WHERE cat.name LIKE ?
-        `
-        const params = [`${cat1}%`]
+  export const getAdsByCategory = async (cat1: string,cat2?: string):Promise<Ads[]> => {
+    const queryBuilder= dsc
+    .getRepository(Ads)
+    .createQueryBuilder("ad")
+    .select(["ad.title", "ad.description", "ad.owner", "ad.price", "ad.picture", "ad.location", "cat.name"])
+    .innerJoin("ad.category","cat")
 
-            if (cat2){
-                params.push(`${cat2}%`)
-                query += ` OR cat.name LIKE ?`
-            }
+    if (cat2) {
+      queryBuilder.where('cat.name LIKE :cat1 OR cat.name LIKE :cat2', { cat1: `${cat1}%`,cat2: `${cat2}%` });
+    } else {
+      queryBuilder.where('cat.name LIKE :cat1', {cat1: `${cat1}%` });
+    }
+  
+    const ads = await queryBuilder.getRawMany();
 
-            db.all(query,params,(err:Error | null, rows) => {
-                if (err) {
-                    reject(err);
-                  } else {
-                    resolve(rows);
-                  }
-            })     
-    })
+    if(ads.length === 0){
+      throw new Error("no Ads find with this category")
+    } else {
+      return(ads)
+    }
+
   }
 
-  export const getAvgPriceCategory = async (cat?:string):Promise<any[]> => {
-    return new Promise((resolve,reject) => {
-        let query = `SELECT cat.name, ROUND(AVG(price), 2) AS AVG_price FROM ad INNER JOIN categories AS cat ON cat.id = ad.category_id WHERE cat.name LIKE ? GROUP BY cat.name`
-        let params:string[] = [`%`]
-        
-        if(cat){params = [`${cat}%`]}
-       
-        db.all(query,params,(err:Error | null, rows) => {
-            if (err) {
-                reject(err);
-              } else {
-                resolve(rows);
-              }
-        })     
-    })
-  }
+  export const getAvgPriceCategory = async (cat?:string):Promise<Ads[]> => {
+      const queryBuilder = dsc
+        .getRepository(Ads)
+        .createQueryBuilder("ad")
+        .select("cat.name")
+        .addSelect("ROUND(AVG(ad.price), 2)", "avgPrice")
+        .innerJoin("ad.category","cat")
+        .groupBy("cat.name");
 
-export const postAds = (title?: string, description?: string,owner?: string,price?: number,picture?: string,location?: string,convertedCategory?:number): Promise<void>=> {
-    return new Promise((resolve, reject) => {
-        const query = "INSERT INTO ad (title,description,owner,price,picture,location,createdAt,category_id) values (?,?,?,?,?,?,?,?)"
-        const params = [
-            title || "Untitled",
-            description || "No description",
-            owner || "Unknown",
-            price,
-            picture || "",
-            location || "Unknown",
-            new Date().toISOString(),
-            convertedCategory || 3
-        ]
-    
-        db.run(query,params,(err:Error | null) => {
-            if (err) {
-                reject(err);
-              } else {
-                resolve();
-              }
-        })
-    })
-}
-
-
-export const putAds = (id:number, data: any): Promise<void> => {
-    return new Promise((resolve, reject) => {
-
-        let sqlQuery = "UPDATE ad SET "
-        const params = []
-        const lastkey = Object.keys(data).length -1
-        let index = 0
-
-        for (const [key,value] of Object.entries(data)){ 
-            
-            if (index !== lastkey){
-                sqlQuery += `${key} = ?, `
-                params.push(value)
-            } else {
-                sqlQuery += `${key} = ? `
-                params.push(value)            
-            }
-                index++
+        if(cat){
+          queryBuilder.where('cat.name LIKE :cat', {cat: `${cat}%` });
         }
-                sqlQuery += `WHERE id = ?`;
-                params.push(id);
 
-        db.run(sqlQuery,params,(err: Error | null) => {
-            if (err){
-                reject(err)
-            } else {
-                resolve();
-            }
-        });
-    })
-}
+        const ads = await queryBuilder.getRawMany();
 
-export const putAdPriceFromDate = (query: {price:number, date: Date}):Promise<void> => {
-    return new Promise((resolve, reject) => {
-        let sqlQuery = "UPDATE ad SET price = ? WHERE createdAt LIKE ?"
-        const params = [query.price,query.date.toISOString().substring(0,10)+ "%"]
-
-        db.run(sqlQuery,params,(err: Error | null) => {
-            if (err){
-                reject(err )
-            } else {
-                resolve()
-            }
-        })
-    })
-}
-
-export const convertCategory = (category?:string):Promise<number> => {
-    return new Promise((resolve,reject) => {
-        if(!category){
-            return
-        }
-        db.all("SELECT * FROM categories",(err:Error | null,rows: Category[]) => {
-            const findCategory = rows.find(row => row.name === category);
-            if (!findCategory){
-                db.run("INSERT INTO categories (name) values (?)",category,(err:Error | null) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        console.log(`new category added`);
-                        db.get("SELECT last_insert_rowid() as id", (err: Error | null, row: { id: number }) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                resolve(row.id);
-                            }
-                        })
-                    }
-                })
-            }
-        })
-    })
-}
-
-export const deleteAds = (query: {id?:number , price?:number}):Promise<void> => {
-    return new Promise((resolve, reject) => {
-        let sqlQuery = "DELETE FROM ad WHERE "
-        const params :number[]= []
-
-        if(query.id) {
-            sqlQuery +="id = ?"
-            params.push(query.id)
-        } else if (query.price){
-            sqlQuery += 'price > ?'
-            params.push(query.price)
+        if(ads.length === 0){
+          throw new Error("no Ads find with this category")
         } else {
-            reject(new Error('Arguments not found.'))
-            return
+          return(ads)
         }
+  }
 
-        db.run(sqlQuery,params,(err: Error | null)  => {
-            if (err) {
-                reject(err);
-            } else {
-                 resolve()
-            }
+export const postAds = async (title?: string, description?: string,owner?: string,price?: number,picture?: string,location?: string,convertedCategory?:number): Promise<Ads>=> {
+        const createAd = dsc.getRepository(Ads)
+        const newAD = createAd.create({
+          title: title || "Untitled",
+          description: description || "No description",
+          owner: owner || "Unknown",
+          price: price || 0,
+          picture: picture || "",
+          location: location || "Unknown",
+          createdAt: new Date(),
+          category_Id: convertedCategory || 3 
         })
-    })
+
+    await createAd.save(newAD)
+
+    return newAD
+}
+
+
+export const putAds = async (id:number, data: any): Promise<any> => {
+  const updateData : { [key: string]: any } = {};
+  for (const [key , value] of Object.entries(data)) {
+    updateData[key] = value;
+  }
+
+  const updatedAd = await dsc.manager.update(Ads, id, updateData)
+  
+  return updatedAd
+}
+
+
+export const convertCategory = async (category?:string):Promise<number | undefined> => {
+  if(!category){
+    return;
+  }
+  const categorySrc = dsc.getRepository(Categories)
+  try {
+    let findCategory = await categorySrc.findOne({where: {name: `${category}`}})
+
+    if(!findCategory){
+      const newCategory = categorySrc.create({name: `${category}`})
+      const saved = await categorySrc.save(newCategory);
+      console.log('New category added');
+      findCategory = saved
+    }
+
+    return findCategory.id
+  } catch (error) {
+    return Promise.reject(error);
+  }
+  
+}
+
+
+export const deleteAds = async (id : number[]):Promise<number> => {
+  if (id.length === 1){
+    await dsc.manager.delete(Ads,id[0])
+  } else {
+    await dsc.manager.delete(Ads,id)
+  }
+
+  return id.length
 }

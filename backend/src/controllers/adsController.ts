@@ -21,17 +21,6 @@ export const getLocationPriceAVG = async (req:Request, res:Response) => {
     }
 }
 
-export const getCatPriceAVG = async (req:Request, res:Response) => {
-    try {
-        const category = req.query.category as string
-        const cat = await adsModel.getAvgPriceCategory(category)
-
-        res.json(cat)
-    } catch (err) {
-        res.status(500).json({message: `Failed to catch argument ${err}`})
-    }
-}
-
 export const getCategoryAds = async (req: Request,res:Response) => {
     try {
         const cat1 = req.query.cat1 as string
@@ -43,13 +32,24 @@ export const getCategoryAds = async (req: Request,res:Response) => {
         res.status(500).json({message: `Failed to catch argument ${err}`})
     }
 }
+export const getCatPriceAVG = async (req:Request, res:Response) => {
+    try {
+        const category = req.query.category as string
+        const cat = await adsModel.getAvgPriceCategory(category)
+
+        res.json(cat)
+    } catch (err) {
+        res.status(500).json({message: `Failed to catch argument ${err}`})
+    }
+}
+
 
 export const create = async (req:Request , res:Response) => {
     try {
         const { title, description, owner, price, picture, location,category} = req.body
         const convertedCategory = await adsModel.convertCategory(category)
-        await adsModel.postAds(title, description, owner, price, picture, location,convertedCategory )
-        res.status(202).send('new ad created')
+        const newAd = await adsModel.postAds(title, description, owner, price, picture, location,convertedCategory )
+        res.status(202).json(newAd)
     }catch(err){
         res.status(500).json({message: "Failed to create ads" + (err)})
     }
@@ -58,67 +58,26 @@ export const create = async (req:Request , res:Response) => {
 export const update = async (req:Request , res:Response) => {
     try {
         const id = parseInt(req.params.id)
-        const allowedProperties = ["title", "description", "owner", "price", "picture", "location","category_id"];
+        const allowedProperties = ["title", "description", "owner", "price", "picture", "location","category_Id"];
         const updatedAdData = Object.fromEntries(
             Object.entries(req.body).filter(([key]) => allowedProperties.includes(key))
           );
-
-        await adsModel.putAds(id,updatedAdData)
-        res.status(200).send(`updated data on id ${id}`)
+        const updated = await adsModel.putAds(id,updatedAdData)
+        res.status(202).json(updated)
     }catch(err){
-        res.status(500).json({message: "Failed to update ad"})
+        res.status(500).json({message: `Failed to update ad` + err})
     }
 }
 
-export const updatePriceFromDate =  async(req: Request, res: Response) => {
-    try {
-      const price = parseInt(req.params.price);
-      if (isNaN(price)) {
-        throw new Error("Invalid price");
-      }
-  
-      const date = req.params.date;
-      if (!date) {
-        throw new Error("Missing date");
-      }
-  
-      const day = parseInt(date.substring(0, 2), 10);
-      const month = parseInt(date.substring(2, 4), 10)-1;
-      const year = parseInt(date.substring(4, 8), 10);
-
-      const parsedDate = new Date();
-      parsedDate.setFullYear(year);
-      parsedDate.setMonth(month);
-      parsedDate.setDate(day);
-  
-      if (isNaN(parsedDate.getTime())) {
-        throw new Error("Invalid date");
-      }
-        await adsModel.putAdPriceFromDate({ price: price, date: parsedDate})
-        res.status(202).send(`updated price ${price}€ for ${parsedDate}`)
-    } catch(err){
-        res.status(500).json({message: `Failed to update price on ad ${err}`})
-    }
-}
 
 export const remove = async (req:Request, res:Response) => {
     try {
-        const query: {id?:number, price?: number} = {}
+        let ids:number[] = []
+        req.params.id.split(",").map((id:string) => ids.push(parseInt(id)));
+        
+        const deletedId = await adsModel.deleteAds(ids)
 
-        if (req.query.id){
-            query.id = parseInt(req.query.id as string)
-        }   else if (req.query.price) {
-            query.price = parseFloat(req.query.price as string);
-          } else {
-            res.status(400).json({ message: 'Arguments not found' });
-            return;
-          }
-
-         await adsModel.deleteAds(query)
-
-        query.id ?
-        res.status(202).send(`delete ad with id ${query.id} was successfully`):
-        res.status(202).send(`delete ad with price > ${query.price} was successfully`)
+ res.status(202).send(`delete ${deletedId} data successfully`)
     }catch(err) {
         res.status(500).json({message: "Failed to delete ads"})
     }

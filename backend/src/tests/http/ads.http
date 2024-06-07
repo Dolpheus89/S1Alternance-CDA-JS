@@ -4,7 +4,7 @@ GET http://localhost:3010/ads
 // Get ALL ads
 
 ###
-GET http://localhost:3010/ads/?location=Bordeaux
+GET http://localhost:3010/ads/?location=Paris
 //Get all ads where location = query 
 
 ###
@@ -44,7 +44,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:3010/ads/2
+PUT http://localhost:3010/ads/4
 Content-Type: application/json
 
 {
@@ -54,21 +54,12 @@ Content-Type: application/json
     "picture": "fourchette.jpg",
     "location": "Remote",
     "createdAt": "2024-06-02",
-    "category_id": 3
+    "category_Id": 3
 
 }
 
 ###
-
-PUT http://localhost:3010/ads/0/01092023
-// change price with params  /:price/:date
-
-###
-
-DELETE http://localhost:3010/ads/?price=40
-// Delete row with price > Value
-###
-DELETE http://localhost:3010/ads/?id=1
+DELETE http://localhost:3010/ads/21,22
 // Delete row with id
 
 ###
