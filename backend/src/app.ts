@@ -1,6 +1,6 @@
 import express from "express"
 import { logger } from "./middlewares/logger";
-import "./utils/dbConfig"
+import "./utils/db"
 import "dotenv/config"
 import adsRoutes from "./routes/adsRoutes"
 

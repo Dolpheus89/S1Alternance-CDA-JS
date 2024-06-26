@@ -7,5 +7,9 @@ export const dsc = new DataSource({
     type:"sqlite",
     database: "src/utils/good_corner.sqlite",
     entities: ["src/entities/*.ts"],
+    synchronize: false,
+    migrations: ["migrations/*.ts"],
+    migrationsTableName: "migrations",
+
 })
 

@@ -1,4 +1,4 @@
-import { dsc } from "../utils/dbConfig";
+import { dsc } from "../utils/db";
 import { Ads } from "../entities/Ads";
 import { Categories } from "../entities/Categories";
 

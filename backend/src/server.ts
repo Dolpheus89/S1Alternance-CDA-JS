@@ -1,5 +1,5 @@
 import app from "./app"
-import { dsc } from "./utils/dbConfig";
+import { dsc } from "./utils/db";
 import "dotenv/config"
 import "reflect-metadata"
 
