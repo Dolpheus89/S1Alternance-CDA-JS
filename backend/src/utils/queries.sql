@@ -1,11 +1,20 @@
+DROP TABLE IF EXISTS ad_tags;
+DROP TABLE IF EXISTS ad;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS tags;
+
 CREATE TABLE IF NOT EXISTS categories 
 (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name VARCHAR(100) NOT NULL
 );
 
-DROP TABLE IF EXISTS ad;
+CREATE TABLE IF NOT EXISTS tags
+(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name VARCHAR(50) NOT NULL
+);
+
 CREATE TABLE ad 
 (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,15 +29,59 @@ CREATE TABLE ad
 	FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
+CREATE TABLE ad_tags 
+(
+    ad_id INTEGER,
+    tag_id INTEGER,
+    FOREIGN KEY (ad_id) REFERENCES ad(id),
+    FOREIGN KEY (tag_id) REFERENCES tags(id),
+    PRIMARY KEY (ad_id, tag_id)
+);
+
 DELETE FROM ad;
 DELETE FROM sqlite_sequence WHERE name='ad';
 DELETE FROM categories;
 DELETE FROM sqlite_sequence WHERE name='categories';
+DELETE FROM tags;
+DELETE FROM sqlite_sequence WHERE name='tags';
 
-insert into categories (id, name) values 
+
+
+INSERT INTO categories (id, name) values 
 (1, 'vêtement'),
 (2, 'voiture'),
 (3, 'autre');
+
+INSERT INTO tags (name) VALUES
+('urgent'),
+('nouveau'),
+('occasion'),
+('réduction'),
+('remise'),
+('unique'),
+('promo'),
+('livraison gratuite'),
+('limité'),
+('vendu'),
+('en stock'),
+('exclusif'),
+('édition limitée'),
+('très demandé'),
+('bon état');
+
+INSERT INTO ad_tags (ad_id, tag_id) VALUES
+-- robe de soirée
+(1, 1),
+(1, 3),
+-- chemise en soie
+(2, 1),
+(2, 2),
+-- chaussures de randonnée
+(3, 1),
+(3, 3),
+-- voiture de collection
+(4, 2),
+(4, 4);
 
 
 INSERT INTO ad (title, description, owner, price, location, createdAt, category_id) VALUES 

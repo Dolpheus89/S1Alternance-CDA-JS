@@ -82,23 +82,32 @@ import { Categories } from "../entities/Categories";
         }
   }
 
-export const postAds = async (title?: string, description?: string,owner?: string,price?: number,picture?: string,location?: string,convertedCategory?:number): Promise<Ads>=> {
-        const createAd = dsc.getRepository(Ads)
-        const newAD = createAd.create({
-          title: title || "Untitled",
-          description: description || "No description",
-          owner: owner || "Unknown",
-          price: price || 0,
-          picture: picture || "",
-          location: location || "Unknown",
-          createdAt: new Date(),
-          category_Id: convertedCategory || 3 
-        })
+  export const postAds = async (
+    title?: string,
+    description?: string,
+    owner?: string,
+    price?: number,
+    picture?: string,
+    location?: string,
+    convertedCategory?: number
+  ): Promise<Ads> => {
+    const adRepository = dsc.getRepository(Ads);
 
-    await createAd.save(newAD)
-
-    return newAD
-}
+    const newAd = adRepository.create({
+      title: title || "Untitled",
+      description: description || "No description",
+      owner: owner || "Unknown",
+      price: price || 0,
+      picture: picture || "",
+      location: location || "Unknown",
+      createdAt: new Date(),
+      category: convertedCategory ? { id: convertedCategory } : undefined,
+    });
+  
+    await adRepository.save(newAd);
+  
+    return newAd;
+  };
 
 
 export const putAds = async (id:number, data: any): Promise<any> => {
@@ -114,7 +123,7 @@ export const putAds = async (id:number, data: any): Promise<any> => {
 
 
 export const convertCategory = async (category?:string):Promise<number | undefined> => {
-  if(!category){
+  if(!category || typeof category !== 'string'){
     return;
   }
   const categorySrc = dsc.getRepository(Categories)

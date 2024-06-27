@@ -1,57 +1,48 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from "typeorm";
 import { Categories } from "./Categories";
+import { Tags } from "./Tags";
 
 @Entity('ad')
 export class Ads {
+
     @PrimaryGeneratedColumn()
-    id?: number
+    id?: number;
 
-    @Column({length: 100})
-    title: string
+    @Column()
+    title: string;
 
-    @Column({nullable:true})
-    description?: string
+    @Column({ type: "text", nullable: true })
+    description?: string;
 
-    @Column({length: 100})
-	owner: string
+    @Column()
+    owner: string;
 
-    @Column({ nullable: true })
-	price?: number | 0
-
-    @Column({ nullable: true })
-    picture?:string
+    @Column({ type: "int", default: 0 })
+    price?: number;
 
     @Column({ nullable: true })
-    location?: string
+    picture?: string;
 
     @Column({ nullable: true })
-	createdAt?: Date
+    location?: string;
 
-    @Column({ type: 'int', default: 3 })
-    category_Id?: number;
+    @Column({ type: "date", default: () => "CURRENT_TIMESTAMP" })
+    createdAt?: Date;
 
-    @ManyToOne(() => Categories, category => category.ads, {eager:true})
-    @JoinColumn({ name: "category_id" })
-    category?: Categories;
+    @ManyToOne(() => Categories, category => category.ads)
+    category: Categories;
 
-    constructor(
-        title: string = '',
-        description: string | undefined = undefined,
-        owner: string = '',
-        price?: number,
-        picture?: string,
-        location?: string,
-        createdAt?: Date,
-        categoryId?: number,
-    ) {
+    @ManyToMany(() => Tags)
+    @JoinTable({
+        name: "ad_tags", 
+        joinColumn: { name: "ad_id", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "tag_id", referencedColumnName: "id" }
+    })
+    tags?: Tags[];
+
+    constructor(title: string, owner: string, category: Categories) {
         this.title = title;
-        this.description = description;
         this.owner = owner;
-        this.price = price;
-        this.picture = picture;
-        this.location = location;
-        this.createdAt = createdAt;
-        this.category_Id = categoryId;
+        this.category = category;
     }
 }
-

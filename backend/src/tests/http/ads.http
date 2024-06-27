@@ -44,7 +44,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:3010/ads/4
+PUT http://localhost:3010/ads/43
 Content-Type: application/json
 
 {
@@ -54,7 +54,7 @@ Content-Type: application/json
     "picture": "fourchette.jpg",
     "location": "Remote",
     "createdAt": "2024-06-02",
-    "category_Id": 3
+    "category": "catapulte"
 
 }
 

@@ -55,21 +55,30 @@ export const create = async (req:Request , res:Response) => {
     }
 }
 
-export const update = async (req:Request , res:Response) => {
+export const update = async (req: Request, res: Response) => {
     try {
-        const id = parseInt(req.params.id)
-        const allowedProperties = ["title", "description", "owner", "price", "picture", "location","category_Id"];
-        const updatedAdData = Object.fromEntries(
-            Object.entries(req.body).filter(([key]) => allowedProperties.includes(key))
-          );
-        const updated = await adsModel.putAds(id,updatedAdData)
-        res.status(202).json(updated)
-    }catch(err){
-        res.status(500).json({message: `Failed to update ad` + err})
+        const id = parseInt(req.params.id);
+        const allowedProperties = ["title", "description", "owner", "price", "picture", "location", "category"];
+        const updatedAdData: { [key: string]: any } = {};
+
+        Object.entries(req.body).forEach(([key, value]) => {
+            if (allowedProperties.includes(key)) {
+                if (typeof value === 'string' || typeof value === 'number' || typeof value === 'undefined') {
+                    updatedAdData[key] = value as string | number | undefined;
+                }
+            }
+        });
+
+        if ('category' in updatedAdData) {
+            updatedAdData.category = await adsModel.convertCategory(updatedAdData.category);
+        }
+
+        const updated = await adsModel.putAds(id, updatedAdData);
+        res.status(202).json(updated);
+    } catch (err) {
+        res.status(500).json({ message: `Failed to update ad: ${err}` });
     }
 }
-
-
 export const remove = async (req:Request, res:Response) => {
     try {
         let ids:number[] = []
