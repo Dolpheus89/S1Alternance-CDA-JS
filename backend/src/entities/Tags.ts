@@ -1,5 +1,5 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Ads } from "./Ads";
 @Entity('tags')
 export class Tags {
 
@@ -8,6 +8,9 @@ export class Tags {
 
     @Column()
     name: string;
+
+    @ManyToMany(() => Ads, ad => ad.tags)
+    ads?: Ads[];
 
 
     constructor(

@@ -29,7 +29,15 @@ GET http://localhost:3010/ads/AVGPriceCat/
 GET http://localhost:3010/ads/AVGPriceCat/?category=v
 ////Get avg price by category where category = query 
 ###
+GET http://localhost:3010/ads/Tags
+// Get ALL tags
 
+###
+GET http://localhost:3010/ads/Tags/?name=v
+//Get all ads where name is like  = query 
+
+
+###
 POST http://localhost:3010/ads/
 Content-Type: application/json
 
@@ -39,12 +47,13 @@ Content-Type: application/json
     "price": 1000000,
     "picture": "saint-graal-canape.jpg",
     "location": "Vatican City",
-    "category": "catapulte" 
+    "category": "catapulte",
+    "tags":"toutou"
 }
 
 ###
 
-PUT http://localhost:3010/ads/43
+PUT http://localhost:3010/ads/17
 Content-Type: application/json
 
 {
@@ -54,7 +63,8 @@ Content-Type: application/json
     "picture": "fourchette.jpg",
     "location": "Remote",
     "createdAt": "2024-06-02",
-    "category": "catapulte"
+    "category": "fourchette",
+    "tags":"Antique,Cool"
 
 }
 

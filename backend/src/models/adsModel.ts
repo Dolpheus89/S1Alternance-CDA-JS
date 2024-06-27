@@ -1,5 +1,6 @@
 import { dsc } from "../utils/db";
 import { Ads } from "../entities/Ads";
+import { Tags } from "../entities/Tags";
 import { Categories } from "../entities/Categories";
 
 
@@ -82,27 +83,51 @@ import { Categories } from "../entities/Categories";
         }
   }
 
+  export const getTagsByName = async (name?: string):Promise<Tags[]> => {
+
+    const queryBuilder = dsc
+    .getRepository(Tags)
+    .createQueryBuilder("tags")
+    .select("tags.name")
+
+    if(name){
+      queryBuilder.where(`tags.name LIKE :name`, {name: `${name}%`})
+    }
+
+    const tags = await queryBuilder.getRawMany()
+
+    if(tags.length === 0){
+      throw new Error("no tags find with this location")
+    } else {
+      return(tags)
+    }
+
+  }
+
   export const postAds = async (
-    title?: string,
+    title: string,
+    owner: string,
+    checkedCategory: Categories,
     description?: string,
-    owner?: string,
     price?: number,
     picture?: string,
     location?: string,
-    convertedCategory?: number
+    checkedTags?:Tags[]
   ): Promise<Ads> => {
     const adRepository = dsc.getRepository(Ads);
 
-    const newAd = adRepository.create({
-      title: title || "Untitled",
-      description: description || "No description",
-      owner: owner || "Unknown",
-      price: price || 0,
-      picture: picture || "",
-      location: location || "Unknown",
-      createdAt: new Date(),
-      category: convertedCategory ? { id: convertedCategory } : undefined,
-    });
+    const newAd = new Ads (
+      title || "Untitled",
+      owner || "Unknown",
+      checkedCategory
+    )
+
+    newAd.description = description || "No description";
+    newAd.price = price || 0;
+    newAd.picture = picture || "";
+    newAd.location = location || "Unknown";
+    newAd.createdAt = new Date();
+    newAd.tags = checkedTags || []
   
     await adRepository.save(newAd);
   
@@ -110,21 +135,46 @@ import { Categories } from "../entities/Categories";
   };
 
 
-export const putAds = async (id:number, data: any): Promise<any> => {
-  const updateData : { [key: string]: any } = {};
-  for (const [key , value] of Object.entries(data)) {
-    updateData[key] = value;
-  }
+  export const putAds = async (id: number, data: any): Promise<Ads | undefined> => {
+    const adRepository = dsc.getRepository(Ads);
 
-  const updatedAd = await dsc.manager.update(Ads, id, updateData)
-  
-  return updatedAd
-}
+    try {
+      const adToUpdate = await adRepository.findOne({
+        where: { id },
+        relations: ['category', 'tags']
+    });
+
+        if (!adToUpdate) {
+            throw new Error(`Ad with id ${id} not found`);
+        }
+
+        if (data.title) adToUpdate.title = data.title;
+        if (data.description) adToUpdate.description = data.description;
+        if (data.owner) adToUpdate.owner = data.owner;
+        if (data.price !== undefined) adToUpdate.price = data.price;
+        if (data.picture) adToUpdate.picture = data.picture;
+        if (data.location) adToUpdate.location = data.location;
+        if (data.createdAt) adToUpdate.createdAt = new Date(data.createdAt);
+
+        if (data.category) {
+            adToUpdate.category = data.category;
+        }
+
+        if (data.tags) {
+            adToUpdate.tags = data.tags;
+        }
+
+        const updatedAd = await adRepository.save(adToUpdate);
+        return updatedAd;
+    } catch (error) {
+        throw new Error(`Failed to update ad: ${error}`);
+    }
+};
 
 
-export const convertCategory = async (category?:string):Promise<number | undefined> => {
+export const checkCategory = async (category?:string):Promise<Categories> => {
   if(!category || typeof category !== 'string'){
-    return;
+    throw new Error('Category is required');
   }
   const categorySrc = dsc.getRepository(Categories)
   try {
@@ -137,12 +187,39 @@ export const convertCategory = async (category?:string):Promise<number | undefin
       findCategory = saved
     }
 
-    return findCategory.id
+    return findCategory
   } catch (error) {
     return Promise.reject(error);
   }
   
 }
+
+export const checkTags = async (tags?:string):Promise<Tags[] | undefined> => {
+  if(!tags || typeof tags !== 'string'){
+    return;
+  }
+  const tagsSrc = dsc.getRepository(Tags)
+  let result:Tags[] = []
+
+  const checkThis = tags.split(",").map(tag => tag.trim())
+  
+  for (const tag of checkThis) {
+      let findTags = await tagsSrc.findOne({where: {name: `${tag}`}})
+  
+      if(!findTags){
+        const newTags = tagsSrc.create({name: `${tag}`})
+        const saved = await tagsSrc.save(newTags);
+        console.log('New tag added');
+        findTags = saved
+      }
+
+      result.push(findTags)
+  }
+
+  return result
+}
+
+
 
 
 export const deleteAds = async (id : number[]):Promise<number> => {

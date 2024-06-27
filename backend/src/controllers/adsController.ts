@@ -11,6 +11,16 @@ export const getLocation = async (req:Request, res:Response) => {
     }
 }
 
+export const getTags = async(req:Request,res:Response)=> {
+    try {
+        const name = req.query.name as string
+        const tags = await adsModel.getTagsByName(name)
+        res.json(tags)
+    } catch (err) {
+        res.status(500).json({message: `Failed to catch argument ${err}`})
+    }
+}
+
 export const getLocationPriceAVG = async (req:Request, res:Response) => {
     try {
         const location = req.query.location as string
@@ -46,9 +56,10 @@ export const getCatPriceAVG = async (req:Request, res:Response) => {
 
 export const create = async (req:Request , res:Response) => {
     try {
-        const { title, description, owner, price, picture, location,category} = req.body
-        const convertedCategory = await adsModel.convertCategory(category)
-        const newAd = await adsModel.postAds(title, description, owner, price, picture, location,convertedCategory )
+        const { title, description, owner, price, picture, location,category,tags} = req.body
+        const checkedCategory= await adsModel.checkCategory(category)
+        const checkedTags = await adsModel.checkTags(tags)
+        const newAd = await adsModel.postAds(title, owner, checkedCategory ,description, price, picture, location,  checkedTags )
         res.status(202).json(newAd)
     }catch(err){
         res.status(500).json({message: "Failed to create ads" + (err)})
@@ -58,7 +69,7 @@ export const create = async (req:Request , res:Response) => {
 export const update = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const allowedProperties = ["title", "description", "owner", "price", "picture", "location", "category"];
+        const allowedProperties = ["title", "description", "owner", "price", "picture", "location", "category", "tags"];
         const updatedAdData: { [key: string]: any } = {};
 
         Object.entries(req.body).forEach(([key, value]) => {
@@ -68,11 +79,14 @@ export const update = async (req: Request, res: Response) => {
                 }
             }
         });
-
         if ('category' in updatedAdData) {
-            updatedAdData.category = await adsModel.convertCategory(updatedAdData.category);
+            updatedAdData.category = await adsModel.checkCategory(updatedAdData.category);
+        }
+        if ('tags' in updatedAdData) {
+            updatedAdData.tags = await adsModel.checkTags(updatedAdData.tags);
         }
 
+        
         const updated = await adsModel.putAds(id, updatedAdData);
         res.status(202).json(updated);
     } catch (err) {

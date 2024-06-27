@@ -40,9 +40,10 @@ export class Ads {
     })
     tags?: Tags[];
 
-    constructor(title: string, owner: string, category: Categories) {
+    constructor(title: string, owner: string, category: Categories ) {
         this.title = title;
         this.owner = owner;
         this.category = category;
+
     }
 }
