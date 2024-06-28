@@ -1,19 +1,18 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Ads } from "./Ads";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Ads } from "./Ads"
 
-@Entity('categories')
+@Entity("categories")
 export class Categories {
-
     @PrimaryGeneratedColumn()
-    id?: number;
+    id?: number
 
     @Column()
-    name: string;
+    name: string
 
-    @OneToMany(() => Ads, ad => ad.category)
-    ads?: Promise<Ads[]>;
+    @OneToMany(() => Ads, (ad) => ad.category)
+    ads?: Promise<Ads[]>
 
-    constructor(name: string = '') {
-        this.name = name;
+    constructor(name: string = "") {
+        this.name = name
     }
 }

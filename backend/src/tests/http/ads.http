@@ -23,19 +23,16 @@ GET http://localhost:3010/ads/categories/?cat1=v
 GET http://localhost:3010/ads/categories/?cat1=vêt&cat2=au
 //Get filtered Add by category where cat1 and cat 2 start with query 
 ###
+GET http://localhost:3010/ads/tags/v
+//Get filtered Add by tag where :tag start with params
+
+###
+
 GET http://localhost:3010/ads/AVGPriceCat/
 ////Get avg price by category for all categories
 ###
 GET http://localhost:3010/ads/AVGPriceCat/?category=v
 ////Get avg price by category where category = query 
-###
-GET http://localhost:3010/ads/Tags
-// Get ALL tags
-
-###
-GET http://localhost:3010/ads/Tags/?name=v
-//Get all ads where name is like  = query 
-
 
 ###
 POST http://localhost:3010/ads/

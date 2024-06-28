@@ -1,49 +1,54 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from "typeorm";
-import { Categories } from "./Categories";
-import { Tags } from "./Tags";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    ManyToMany,
+    JoinTable,
+} from "typeorm"
+import { Categories } from "./Categories"
+import { Tags } from "./Tags"
 
-@Entity('ad')
+@Entity("ad")
 export class Ads {
-
     @PrimaryGeneratedColumn()
-    id?: number;
+    id?: number
 
     @Column()
-    title: string;
+    title: string
 
     @Column({ type: "text", nullable: true })
-    description?: string;
+    description?: string
 
     @Column()
-    owner: string;
+    owner: string
 
     @Column({ type: "int", default: 0 })
-    price?: number;
+    price?: number
 
     @Column({ nullable: true })
-    picture?: string;
+    picture?: string
 
     @Column({ nullable: true })
-    location?: string;
+    location?: string
 
     @Column({ type: "date", default: () => "CURRENT_TIMESTAMP" })
-    createdAt?: Date;
+    createdAt?: Date
 
-    @ManyToOne(() => Categories, category => category.ads)
-    category: Categories;
+    @ManyToOne(() => Categories, (category) => category.ads)
+    category: Categories
 
     @ManyToMany(() => Tags)
     @JoinTable({
-        name: "ad_tags", 
+        name: "ad_tags",
         joinColumn: { name: "ad_id", referencedColumnName: "id" },
-        inverseJoinColumn: { name: "tag_id", referencedColumnName: "id" }
+        inverseJoinColumn: { name: "tag_id", referencedColumnName: "id" },
     })
-    tags?: Tags[];
+    tags?: Tags[]
 
-    constructor(title: string, owner: string, category: Categories ) {
-        this.title = title;
-        this.owner = owner;
-        this.category = category;
-
+    constructor(title: string, owner: string, category: Categories) {
+        this.title = title
+        this.owner = owner
+        this.category = category
     }
 }
