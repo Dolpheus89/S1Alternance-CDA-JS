@@ -1,28 +1,56 @@
-export const ads = [
-    {
-      id: 1,
-      title: "Bike to sell",
-      description:
-        "My bike is blue, working fine. I'm selling it because I've got a new one",
-      owner: "bike.seller@gmail.com",
-      price: 100,
-      picture:
-        "https://images.lecho.be/view?iid=dc:113129565&context=ONLINE&ratio=16/9&width=640&u=1508242455000",
-      location: "Paris",
-      createdAt: "2023-09-05T10:13:14.755Z",
-    },
-    {
-      id: 2,
-      title: "Car to sell",
-      description:
-        "My car is blue, working fine. I'm selling it because I've got a new one",
-      owner: "car.seller@gmail.com",
-      price: 10000,
-      picture:
-        "https://www.automobile-magazine.fr/asset/cms/34973/config/28294/apres-plusieurs-prototypes-la-bollore-bluecar-a-fini-par-devoiler-sa-version-definitive.jpg",
-      location: "Paris",
-      createdAt: "2023-10-05T10:14:15.922Z",
-    },
-  ];
+import sqlite3 from 'sqlite3'
+import { DataSource } from 'typeorm'
+import { Ads } from '../entities/Ads'
+import { Categories } from '../entities/Categories'
+import { Tags } from '../entities/Tags'
 
+sqlite3.verbose()
+
+export const dsc = new DataSource({
+    type:"sqlite",
+    database: "src/utils/good_corner.sqlite",
+    entities: ["src/entities/*.ts"],
+    synchronize: true,
+    migrations: ["migrations/*.ts"],
+    migrationsTableName: "migrations",
+
+})
+
+
+export const clearDB = async () => {
+    await dsc.manager.clear(Ads)
+    await dsc.manager.clear(Categories)
+    await dsc.manager.clear(Tags)
+}
+
+export const createAndPersistAd = async (title: string, owner: string, category: Categories, tags: Tags[]) => {
+    const ad = new Ads(title, owner, category);
+    ad.tags = tags;
+
+    await dsc.manager.save(ad);
+};
+export const initData = async () => {
+    try {
+        const tag1 = new Tags('Vieux matériel');
+        const tag2 = new Tags('Bonne affaire');
+        const tag3 = new Tags('0 carbone');
+
+        await dsc.manager.save([tag1, tag2, tag3]);
+
+
+        const category1 = new Categories("Meubles");
+        const category2 = new Categories("Locomotion");
+        const category3 = new Categories("Autres");
+
+        await dsc.manager.save([category1, category2, category3]);
+
+        await createAndPersistAd('armoire normande', 'louis', category1, [tag1, tag3]);
+        await createAndPersistAd('roller', 'mireille', category2, [tag2]);
+        await createAndPersistAd('table de jardin', 'benoit', category1, [tag3]);
+
+        console.log("Initialisation des données terminée.");
+    } catch (error) {
+        console.error("Erreur lors de l'initialisation des données :", error);
+    }
+};
 

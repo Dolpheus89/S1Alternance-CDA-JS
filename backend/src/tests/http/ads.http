@@ -1,0 +1,76 @@
+//Use "REST Client" and SQLite Extensions for this file.
+
+GET http://localhost:3010/ads
+// Get ALL ads
+
+###
+GET http://localhost:3010/ads/?location=Paris
+//Get all ads where location = query 
+
+###
+GET http://localhost:3010/ads/AVGPrice/
+//Get avg price for all locations
+
+###
+GET http://localhost:3010/ads/AVGPrice/?location=Paris
+//Get avg price where location = query
+
+###
+GET http://localhost:3010/ads/categories/?cat1=v
+//Get filtered Add by category where cat1 start with query 
+
+###
+GET http://localhost:3010/ads/categories/?cat1=vêt&cat2=au
+//Get filtered Add by category where cat1 and cat 2 start with query 
+###
+GET http://localhost:3010/ads/AVGPriceCat/
+////Get avg price by category for all categories
+###
+GET http://localhost:3010/ads/AVGPriceCat/?category=v
+////Get avg price by category where category = query 
+###
+GET http://localhost:3010/ads/Tags
+// Get ALL tags
+
+###
+GET http://localhost:3010/ads/Tags/?name=v
+//Get all ads where name is like  = query 
+
+
+###
+POST http://localhost:3010/ads/
+Content-Type: application/json
+
+{
+    "title": "Le Saint Graal des canapés",
+    "description": "Ce canapé a été béni par le Pape lui-même et a des pouvoirs de guérison. Il est également incroyablement confortable et parfait pour les soirées Netflix.",
+    "price": 1000000,
+    "picture": "saint-graal-canape.jpg",
+    "location": "Vatican City",
+    "category": "catapulte",
+    "tags":"toutou"
+}
+
+###
+
+PUT http://localhost:3010/ads/17
+Content-Type: application/json
+
+{
+    "title": "Un coup, quatre trous",
+    "description": "combat de fourchette",
+    "price": 150,
+    "picture": "fourchette.jpg",
+    "location": "Remote",
+    "createdAt": "2024-06-02",
+    "category": "fourchette",
+    "tags":"Antique,Cool"
+
+}
+
+###
+DELETE http://localhost:3010/ads/21,22
+// Delete row with id
+
+###
+
