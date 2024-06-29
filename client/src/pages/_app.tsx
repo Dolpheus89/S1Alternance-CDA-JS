@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout"
 import "@/styles/globals.css"
 import "@/styles/Header.css"
+import "@/styles/NewAD.css"
 import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
 
