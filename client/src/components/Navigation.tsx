@@ -17,8 +17,8 @@ const categories: string[] = [
 export default function Navigation() {
     return (
         <nav className="categories-navigation">
-            {categories.map((category) => (
-                <a href="" className="category-navigation-link">
+            {categories.map((category, index) => (
+                <a href="" key={index} className="category-navigation-link">
                     {category}
                 </a>
             ))}
