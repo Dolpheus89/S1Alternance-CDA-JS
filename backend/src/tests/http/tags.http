@@ -1,0 +1,11 @@
+###
+GET http://localhost:3010/tags
+// Get ALL tags
+
+###
+GET http://localhost:3010/tags/?name=v
+//Get all ads where name is like  = query 
+
+###
+DELETE  http://localhost:3010/tags/71
+// Delete tags row with id

@@ -8,19 +8,23 @@
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/utils/db.ts",
     "migration:up": "typeorm-ts-node-commonjs migration:run -d src/utils/db.ts",
-    "migration:down": "typeorm-ts-node-commonjs migration:revert -d src/utils/db.ts"
+    "migration:down": "typeorm-ts-node-commonjs migration:revert -d src/utils/db.ts",
+    "format": "prettier --write \"./src/**/*.{js,jsx,css,ts}\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/sqlite3": "^3.1.11",
+    "prettier": "3.3.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.4.5",

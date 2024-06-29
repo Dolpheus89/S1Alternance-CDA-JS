@@ -1,0 +1,18 @@
+#newAd {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    input,
+    textarea,
+    select {
+        min-width: 350px;
+    }
+
+    textarea {
+        min-height: 100px;
+    }
+}
