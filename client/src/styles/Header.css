@@ -29,6 +29,8 @@
         padding: 16px 10px 6px;
         white-space: nowrap;
         overflow-x: scroll;
+        display: flex;
+        justify-content: center;
 
         .category-navigation-link {
             text-decoration: unset;
@@ -43,12 +45,6 @@
             &:last-child::after {
                 content: "";
             }
-        }
-
-        @media screen and (min-width: 720px) {
-            padding-top: 14px;
-            display: flex;
-            justify-content: space-between;
         }
     }
 }

@@ -34,7 +34,7 @@ export const getCategoryAds = async (req: Request, res: Response) => {
     }
 }
 
-export const getAdsByTag = async (req :Request , res:Response) => {
+export const getAdsByTag = async (req: Request, res: Response) => {
     try {
         const tag = req.params.tag
 
@@ -43,7 +43,6 @@ export const getAdsByTag = async (req :Request , res:Response) => {
     } catch (err) {
         res.status(500).json({ message: `Failed to catch argument ${err}` })
     }
-
 }
 
 export const getCatPriceAVG = async (req: Request, res: Response) => {

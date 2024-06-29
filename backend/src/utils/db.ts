@@ -10,7 +10,7 @@ export const dsc = new DataSource({
     type: "sqlite",
     database: "src/utils/good_corner.sqlite",
     entities: ["src/entities/*.ts"],
-    synchronize: true,
+    synchronize: false,
     migrations: ["migrations/*.ts"],
     migrationsTableName: "migrations",
 })
@@ -25,10 +25,12 @@ export const createAndPersistAd = async (
     title: string,
     owner: string,
     category: Categories,
-    tags: Tags[]
+    tags: Tags[],
+    picture: string
 ) => {
     const ad = new Ads(title, owner, category)
     ad.tags = tags
+    ad.picture = picture
 
     await dsc.manager.save(ad)
 }
@@ -46,12 +48,27 @@ export const initData = async () => {
 
         await dsc.manager.save([category1, category2, category3])
 
-        await createAndPersistAd("armoire normande", "louis", category1, [
-            tag1,
-            tag3,
-        ])
-        await createAndPersistAd("roller", "mireille", category2, [tag2])
-        await createAndPersistAd("table de jardin", "benoit", category1, [tag3])
+        await createAndPersistAd(
+            "armoire normande",
+            "louis",
+            category1,
+            [tag1, tag3],
+            "images/vaisselier.webp"
+        )
+        await createAndPersistAd(
+            "roller",
+            "mireille",
+            category2,
+            [tag2],
+            "images/roller.jpg"
+        )
+        await createAndPersistAd(
+            "table de jardin",
+            "benoit",
+            category1,
+            [tag3],
+            "images/table.webp"
+        )
 
         console.log("Initialisation des données terminée.")
     } catch (error) {

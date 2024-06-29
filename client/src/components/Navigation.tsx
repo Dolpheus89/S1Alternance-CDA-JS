@@ -1,27 +1,41 @@
-const categories: string[] = [
-    "Ameublement",
-    "Électroménager",
-    "Photographie",
-    "Informatique",
-    "Téléphonie",
-    "Vélos",
-    "Véhicules",
-    "Sport",
-    "Habillement",
-    "Bébé",
-    "Outillage",
-    "Services",
-    "Vacances",
-]
+import axios from "axios"
+import { useState, useEffect } from "react"
 
-export default function Navigation() {
+const Navigation = () => {
+    const [categories, setCategories] = useState([
+        {
+            name: "Meubles",
+            id: 99,
+        },
+    ])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await axios.get(
+                    "http://localhost:3010/categories/"
+                )
+                setCategories(result.data)
+            } catch (err) {
+                console.log("error", err)
+            }
+        }
+        fetchData()
+    }, [])
+
     return (
         <nav className="categories-navigation">
-            {categories.map((category, index) => (
-                <a href="" key={index} className="category-navigation-link">
-                    {category}
+            {categories.map((category) => (
+                <a
+                    href="#"
+                    key={category.id}
+                    className="category-navigation-link"
+                >
+                    {category.name}
                 </a>
             ))}
         </nav>
     )
 }
+
+export default Navigation

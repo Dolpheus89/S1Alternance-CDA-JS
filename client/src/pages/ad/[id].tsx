@@ -1,4 +1,3 @@
-import { log } from "console"
 import { useRouter } from "next/router"
 
 const AdDetailComponent = () => {

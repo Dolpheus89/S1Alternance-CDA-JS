@@ -3,7 +3,7 @@ import { dsc, clearDB, initData } from "./utils/db"
 import "dotenv/config"
 import "reflect-metadata"
 
-const PORT: string = process.env.BACKEND_PORT || "3000"
+const PORT: string = process.env.BACKEND_PORT || "3310"
 
 app.listen(PORT, async () => {
     await dsc.initialize()

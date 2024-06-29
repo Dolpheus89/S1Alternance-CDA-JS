@@ -1,7 +1,7 @@
 import Navigation from "./Navigation"
 import Search from "./Search"
 
-export default function Home() {
+export default function Header() {
     return (
         <header className="header">
             <div className="main-menu">

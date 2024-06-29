@@ -91,11 +91,16 @@ h1 {
     border: 1px solid lightgray;
     color: inherit;
     background-color: white;
+    height: 90%;
 }
 
 .ad-card-link {
     text-decoration: inherit;
     color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
 .ad-card-image {

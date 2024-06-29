@@ -5,6 +5,6 @@ const router = Router()
 
 router.get("/", tagsControllers.getTags)
 
-router.delete("/:id",tagsControllers.remove)
+router.delete("/:id", tagsControllers.remove)
 
 export default router

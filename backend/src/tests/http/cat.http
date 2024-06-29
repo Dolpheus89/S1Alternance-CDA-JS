@@ -1,0 +1,4 @@
+//Use "REST Client" and SQLite Extensions for this file.
+
+GET http://localhost:3010/categories
+// Get ALL ads

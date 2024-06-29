@@ -17,28 +17,28 @@ export const getLocationAds = async (location?: string): Promise<Ads[]> => {
 }
 
 export const getAdsByTags = async (tags: string): Promise<Ads[]> => {
-  const queryBuilder = dsc
-  .getRepository(Ads)
-  .createQueryBuilder("ad")
-  .select([
-    "ad.title",
-    "ad.description",
-    "ad.owner",
-    "ad.price",
-    "ad.picture",
-    "ad.location",
-    "tag.name",
-]).innerJoin("ad.tags", "tag")
-  .where ("tag.name LIKE :tag", {tag: `${tags}%`})
+    const queryBuilder = dsc
+        .getRepository(Ads)
+        .createQueryBuilder("ad")
+        .select([
+            "ad.title",
+            "ad.description",
+            "ad.owner",
+            "ad.price",
+            "ad.picture",
+            "ad.location",
+            "tag.name",
+        ])
+        .innerJoin("ad.tags", "tag")
+        .where("tag.name LIKE :tag", { tag: `${tags}%` })
 
-  const ads = await queryBuilder.getRawMany()
+    const ads = await queryBuilder.getRawMany()
 
-  if (ads.length === 0) {
-    throw new Error("no Ads find with this tag")
-} else {
-    return ads
-}
-
+    if (ads.length === 0) {
+        throw new Error("no Ads find with this tag")
+    } else {
+        return ads
+    }
 }
 
 export const getAveragePrice = async (location?: string): Promise<Ads[]> => {
