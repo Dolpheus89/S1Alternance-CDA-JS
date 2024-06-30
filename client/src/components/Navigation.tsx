@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
+import Link from "next/link"
 
 const Navigation = () => {
     const [categories, setCategories] = useState([
@@ -26,13 +27,13 @@ const Navigation = () => {
     return (
         <nav className="categories-navigation">
             {categories.map((category) => (
-                <a
-                    href="#"
+                <Link
+                    href={`/filter/${category.name}`}
                     key={category.id}
                     className="category-navigation-link"
                 >
                     {category.name}
-                </a>
+                </Link>
             ))}
         </nav>
     )

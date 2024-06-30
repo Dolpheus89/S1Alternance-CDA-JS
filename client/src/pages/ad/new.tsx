@@ -94,6 +94,7 @@ const NewAD = () => {
                         className="text-field"
                         onChange={selectCategories}
                     >
+                        <option selected></option>
                         {categories.map((el) => (
                             <option value={el.name} key={el.id}>
                                 {el.name}

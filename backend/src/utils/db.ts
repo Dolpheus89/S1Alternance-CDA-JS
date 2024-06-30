@@ -53,21 +53,21 @@ export const initData = async () => {
             "louis",
             category1,
             [tag1, tag3],
-            "images/vaisselier.webp"
+            "/images/vaisselier.webp"
         )
         await createAndPersistAd(
             "roller",
             "mireille",
             category2,
             [tag2],
-            "images/roller.jpg"
+            "/images/roller.jpg"
         )
         await createAndPersistAd(
             "table de jardin",
             "benoit",
             category1,
             [tag3],
-            "images/table.webp"
+            "/images/table.webp"
         )
 
         console.log("Initialisation des données terminée.")

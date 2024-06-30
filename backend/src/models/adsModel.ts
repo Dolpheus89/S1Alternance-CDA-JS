@@ -3,6 +3,41 @@ import { Ads } from "../entities/Ads"
 import { Tags } from "../entities/Tags"
 import { Categories } from "../entities/Categories"
 
+export const getAdByID = async (id: number): Promise<Ads> => {
+    const ads = await dsc.manager.findOneBy(Ads, {
+        id: id,
+    })
+
+    if (!ads) {
+        throw new Error("no Ads find with this location")
+    } else {
+        return ads
+    }
+}
+
+export const getAdsByTitle = async (name: string): Promise<Ads[]> => {
+    const queryBuilder = dsc
+        .getRepository(Ads)
+        .createQueryBuilder("ad")
+        .select([
+            "title",
+            "description",
+            "owner",
+            "price",
+            "picture",
+            "location",
+        ])
+        .where("title LIKE :name", { name: `%${name}%` })
+
+    const ads = await queryBuilder.getRawMany()
+
+    if (ads.length === 0) {
+        throw new Error("no Ads find with this tag")
+    } else {
+        return ads
+    }
+}
+
 export const getLocationAds = async (location?: string): Promise<Ads[]> => {
     const ads = await dsc.manager.find(Ads, {
         where: { location },
@@ -72,12 +107,12 @@ export const getAdsByCategory = async (
         .getRepository(Ads)
         .createQueryBuilder("ad")
         .select([
-            "ad.title",
-            "ad.description",
-            "ad.owner",
-            "ad.price",
-            "ad.picture",
-            "ad.location",
+            "title",
+            "description",
+            "owner",
+            "price",
+            "picture",
+            "location",
             "cat.name",
         ])
         .innerJoin("ad.category", "cat")
@@ -142,7 +177,7 @@ export const postAds = async (
 
     newAd.description = description || "No description"
     newAd.price = price || 0
-    newAd.picture = picture || ""
+    newAd.picture = picture || "/shield-question.svg"
     newAd.location = location || "Unknown"
     newAd.createdAt = new Date()
     newAd.tags = checkedTags || []
