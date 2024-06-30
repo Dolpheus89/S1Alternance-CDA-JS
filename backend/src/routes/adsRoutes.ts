@@ -4,6 +4,9 @@ import * as adsControllers from "../controllers/adsController"
 const router = Router()
 
 router.get("/", adsControllers.getLocation)
+router.get("/byID/:id", adsControllers.getAd)
+router.get("/byName/", adsControllers.getAdsByName)
+
 router.get("/AVGPrice/", adsControllers.getLocationPriceAVG)
 router.get("/categories/", adsControllers.getCategoryAds)
 router.get("/AVGPriceCat/", adsControllers.getCatPriceAVG)

@@ -1,7 +1,34 @@
+import { useRouter } from "next/router"
+import { useRef, useState } from "react"
+
 export default function Search() {
+    const router = useRouter()
+    const [placeholder, setPlaceholder] = useState("Search...")
+    const search = useRef<HTMLInputElement | null>(null)
+
+    const searchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (search.current) {
+            let result = search.current.value
+
+            if (result.trim() === "") {
+                setPlaceholder("Valeur non valide.")
+                router.push(`/filter/search/${result}`)
+            }
+
+            router.push(`/filter/search/${result}`)
+            e.currentTarget.reset()
+        }
+    }
+
     return (
-        <form className="text-field-with-button">
-            <input className="text-field main-search-field" type="search" />
+        <form className="text-field-with-button" onSubmit={searchSubmit}>
+            <input
+                className="text-field main-search-field"
+                type="search"
+                ref={search}
+                placeholder={placeholder}
+            />
             <button className="button button-primary">
                 <svg
                     aria-hidden="true"

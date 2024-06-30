@@ -2,6 +2,15 @@
 
 GET http://localhost:3010/ads
 // Get ALL ads
+###
+
+GET http://localhost:3010/ads/byID/140
+// Get Ad by id whith params
+
+###
+
+GET http://localhost:3010/ads/byName/?name=moire
+// Get Ad by name whith query
 
 ###
 GET http://localhost:3010/ads/?location=Paris

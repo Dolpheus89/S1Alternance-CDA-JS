@@ -49,25 +49,25 @@ export const initData = async () => {
         await dsc.manager.save([category1, category2, category3])
 
         await createAndPersistAd(
-            "armoire normande",
-            "louis",
+            "Armoire normande",
+            "Louis",
             category1,
             [tag1, tag3],
-            "images/vaisselier.webp"
+            "/images/vaisselier.webp"
         )
         await createAndPersistAd(
-            "roller",
-            "mireille",
+            "Rollers",
+            "Mireille",
             category2,
             [tag2],
-            "images/roller.jpg"
+            "/images/roller.jpg"
         )
         await createAndPersistAd(
-            "table de jardin",
-            "benoit",
+            "Table de jardin",
+            "Benoit",
             category1,
             [tag3],
-            "images/table.webp"
+            "/images/table.webp"
         )
 
         console.log("Initialisation des données terminée.")

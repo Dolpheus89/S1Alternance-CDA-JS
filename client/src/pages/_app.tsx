@@ -2,6 +2,7 @@ import Layout from "@/components/Layout"
 import "@/styles/globals.css"
 import "@/styles/Header.css"
 import "@/styles/NewAD.css"
+import "@/styles/AdDetailComponent.css"
 import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
 

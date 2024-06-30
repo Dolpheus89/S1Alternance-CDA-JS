@@ -2,6 +2,26 @@ import { Request, Response } from "express"
 import * as adsModel from "../models/adsModel"
 import * as tagsModel from "../models/tagsModel"
 
+export const getAd = async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id)
+        const ads = await adsModel.getAdByID(id)
+        res.status(200).json(ads)
+    } catch (err) {
+        res.status(500).json({ message: `Failed to catch argument ${err}` })
+    }
+}
+
+export const getAdsByName = async (req: Request, res: Response) => {
+    try {
+        const name = req.query.name as string
+        const ads = await adsModel.getAdsByTitle(name)
+        res.status(200).json(ads)
+    } catch (err) {
+        res.status(500).json({ message: `Failed to catch argument ${err}` })
+    }
+}
+
 export const getLocation = async (req: Request, res: Response) => {
     try {
         const location = req.query.location as string
