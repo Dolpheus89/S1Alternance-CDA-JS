@@ -1,48 +1,46 @@
+import AdCard, { AdCardProps } from "../../../components/AdCard"
 import { useRouter } from "next/router"
-import AdCard, { AdCardProps } from "../../components/AdCard"
 import { useState, useEffect } from "react"
 import axios from "axios"
 
-const FilteredByCategory = () => {
+const SearchPage = () => {
+    const router = useRouter()
     const [total, setTotal] = useState(0)
     const [ads, setAds] = useState<AdCardProps[]>([])
     const [isLoading, setIsLoading] = useState(true)
 
-    const router = useRouter()
-
     useEffect(() => {
-        const fetchData = async (category: string) => {
+        const fetchData = async (name: string) => {
             try {
                 const result = await axios.get(
-                    `http://localhost:3010/ads/categories/?cat1=${category}`
+                    `http://localhost:3010/ads/byName/?name=${name}`
                 )
                 console.log(result.data)
                 setAds(result.data)
                 setIsLoading(false)
             } catch (err) {
                 console.log("error", err)
-                setAds([
-                    {
-                        id: "0",
-                        picture: "/shield-question.svg",
-                        title: "Recherche non trouvé",
-                        price: 0,
-                    },
-                ])
+                setAds([])
                 setIsLoading(false)
             }
         }
-        if (router.query.category) {
-            fetchData(router.query.category as string)
+        if (router.query.search) {
+            fetchData(router.query.search as string)
         }
-    }, [router.query.category])
+    }, [router.query.search])
 
     const addPrice = (price: number) => {
         setTotal(total! + price)
     }
+
     return (
         <>
-            <h2>{router.query.category} :</h2>
+            <h2>Resultat de la recherche "{router.query.search}"</h2>
+            {ads.length < 1 ? (
+                <p>No results, try again...</p>
+            ) : (
+                <p>Prix total: {total} €</p>
+            )}
             {isLoading ? (
                 <p>loading ...</p>
             ) : (
@@ -66,4 +64,4 @@ const FilteredByCategory = () => {
     )
 }
 
-export default FilteredByCategory
+export default SearchPage

@@ -5,8 +5,8 @@ import Link from "next/link"
 const Navigation = () => {
     const [categories, setCategories] = useState([
         {
-            name: "Meubles",
-            id: 99,
+            name: "",
+            id: 0,
         },
     ])
 
@@ -28,7 +28,7 @@ const Navigation = () => {
         <nav className="categories-navigation">
             {categories.map((category) => (
                 <Link
-                    href={`/filter/${category.name}`}
+                    href={`/filter/category/${category.name}`}
                     key={category.id}
                     className="category-navigation-link"
                 >
