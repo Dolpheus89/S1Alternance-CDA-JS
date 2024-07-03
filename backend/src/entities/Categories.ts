@@ -6,7 +6,7 @@ import { Field, ID, ObjectType } from "type-graphql"
 @Entity("categories")
 export class Categories {
     @PrimaryGeneratedColumn()
-    @Field( type => ID)
+    @Field((type) => ID)
     id?: number
 
     @Column()
@@ -14,7 +14,7 @@ export class Categories {
     name: string
 
     @OneToMany(() => Ads, (ad) => ad.category)
-    @Field( type => [Ads])
+    @Field((type) => [Ads])
     ads?: Promise<Ads[]>
 
     constructor(name: string = "") {

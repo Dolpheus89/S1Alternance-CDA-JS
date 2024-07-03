@@ -14,7 +14,7 @@ import { Field, ID, Int, ObjectType } from "type-graphql"
 @Entity("ad")
 export class Ads {
     @PrimaryGeneratedColumn()
-    @Field(type => ID)
+    @Field((type) => ID)
     id?: number
 
     @Column()
@@ -30,7 +30,7 @@ export class Ads {
     owner: string
 
     @Column({ type: "int", default: 0 })
-    @Field(type => Int)
+    @Field((type) => Int)
     price?: number
 
     @Column({ nullable: true })
@@ -42,20 +42,20 @@ export class Ads {
     location?: string
 
     @Column({ type: "date", default: () => "CURRENT_TIMESTAMP" })
-    @Field(type => String)
+    @Field((type) => String)
     createdAt?: Date
 
-    @ManyToOne(() => Categories, (category) => category.ads, {eager: true})
-    @Field(type => Categories)
+    @ManyToOne(() => Categories, (category) => category.ads, { eager: true })
+    @Field((type) => Categories)
     category?: Categories
 
-    @ManyToMany(() => Tags , {eager: true})
+    @ManyToMany(() => Tags, { eager: true })
     @JoinTable({
         name: "ad_tags",
         joinColumn: { name: "ad_id", referencedColumnName: "id" },
         inverseJoinColumn: { name: "tag_id", referencedColumnName: "id" },
     })
-    @Field(type => [Tags])
+    @Field((type) => [Tags])
     tags?: Tags[]
 
     constructor(title: string, owner: string, category: Categories) {

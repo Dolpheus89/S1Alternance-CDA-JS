@@ -6,7 +6,7 @@ import { ObjectType, Field, ID } from "type-graphql"
 @Entity("tags")
 export class Tags {
     @PrimaryGeneratedColumn()
-    @Field(type => ID)
+    @Field((type) => ID)
     id?: number
 
     @Column()
@@ -14,7 +14,7 @@ export class Tags {
     name: string
 
     @ManyToMany(() => Ads, (ad) => ad.tags)
-    @Field(type => [Ads])
+    @Field((type) => [Ads])
     ads?: Ads[]
 
     constructor(name: string = "") {
