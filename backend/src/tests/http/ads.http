@@ -1,5 +1,6 @@
 //Use "REST Client" and SQLite Extensions for this file.
 
+// Get ALL ads
 POST http://localhost:3010/
 Content-Type: application/json
 
@@ -7,47 +8,58 @@ Content-Type: application/json
     "query": "query QueryAllAds { getAllAds { title createdAt category { name } tags { name } } }"
 }
 
-// Get ALL ads with selected atribut
+###
+// Get ad with id
+POST http://localhost:3010/
+Content-Type: application/json
+
+{
+  "query": "query ExampleQuery($getAdByIdId: Float!) { getAdById(id: $getAdById) { id title } }",
+  "variables": {
+    "getAdById": 207
+  }
+}
+
+
+
+###
+# // Get Ad by name whith query
+POST http://localhost:3010/
+Content-Type: application/json
+
+{
+  "query": "query ExampleQuery($title: String!) { getAdByTitle(title: $title) { id title category { id name } }}",
+    "variables": {
+    "title": "moire"
+  }
+}
+
+
 ###
 
-# GET http://localhost:3010/ads/byID/140
-# // Get Ad by id whith params
+//Get filtered Ads by category 
 
-# ###
 
-# GET http://localhost:3010/ads/byName/?name=moire
-# // Get Ad by name whith query
+{
+  "query": "query ExampleQuery( $name: String!) { getAdsByCategory(name: $name) { id title description owner price picture location createdAt category { id name } tags { id name } }}",
+    "variables": {
+    "name": "meu"
+  }
+}
 
-# ###
-# GET http://localhost:3010/ads/?location=Paris
-# //Get all ads where location = query 
+ 
+###
+ //Get filtered Add by tag where :tag start with params
+POST http://localhost:3010/
+Content-Type: application/json
 
-# ###
-# GET http://localhost:3010/ads/AVGPrice/
-# //Get avg price for all locations
+{
+  "query": "query ExampleQuery($name: String!) {getAdsByTag(name: $name) { id title tags { id name }}}",
+    "variables": {
+    "name": "vieux"
+  }
+}
 
-# ###
-# GET http://localhost:3010/ads/AVGPrice/?location=Paris
-# //Get avg price where location = query
-
-# ###
-# GET http://localhost:3010/ads/categories/?cat1=v
-# //Get filtered Add by category where cat1 start with query 
-
-# ###
-# GET http://localhost:3010/ads/categories/?cat1=vêt&cat2=au
-# //Get filtered Add by category where cat1 and cat 2 start with query 
-# ###
-# GET http://localhost:3010/ads/tags/v
-# //Get filtered Add by tag where :tag start with params
-
-# ###
-
-# GET http://localhost:3010/ads/AVGPriceCat/
-# ////Get avg price by category for all categories
-# ###
-# GET http://localhost:3010/ads/AVGPriceCat/?category=v
-# ////Get avg price by category where category = query 
 
 # ###
 # POST http://localhost:3010/ads/

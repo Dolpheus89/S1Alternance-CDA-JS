@@ -5,7 +5,9 @@ import { ApolloServer } from "@apollo/server"
 import {startStandaloneServer} from "@apollo/server/standalone"
 import { dsc, clearDB, initData } from "./utils/db"
 import { buildSchema } from "type-graphql"
-import { AdsResolvers } from "./resolvers/AdsResolvers"
+import { AdsQueries } from "./resolvers/AdsQueries"
+import { TagsQueries } from "./resolvers/TagsQueries"
+import { CategoriesQueries } from "./resolvers/CategoryQueries"
 
 const PORT: number =Number(process.env.BACKEND_PORT) || 3310
 
@@ -13,7 +15,7 @@ const PORT: number =Number(process.env.BACKEND_PORT) || 3310
 async function startServerApollo() {
 
     const schema =  await buildSchema({
-        resolvers: [AdsResolvers]
+        resolvers: [AdsQueries,TagsQueries,CategoriesQueries]
     })
 
     const server = new ApolloServer({

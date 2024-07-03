@@ -22,7 +22,7 @@ export class Ads {
     title: string
 
     @Column({ type: "text", nullable: true })
-    @Field()
+    @Field({ nullable: true })
     description?: string
 
     @Column()
@@ -34,11 +34,11 @@ export class Ads {
     price?: number
 
     @Column({ nullable: true })
-    @Field()
+    @Field({ nullable: true })
     picture?: string
 
     @Column({ nullable: true })
-    @Field()
+    @Field({ nullable: true })
     location?: string
 
     @Column({ type: "date", default: () => "CURRENT_TIMESTAMP" })
