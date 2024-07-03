@@ -1,11 +1,24 @@
-###
-GET http://localhost:3010/tags
-// Get ALL tags
+// Get ALL Tags
+POST http://localhost:3010/
+Content-Type: application/json
+
+{
+    "query": "query QueryAllTags { getAllTags { id name } }"
+}
 
 ###
-GET http://localhost:3010/tags/?name=v
-//Get all ads where name is like  = query 
+// Get tags with id
+POST http://localhost:3010/
+Content-Type: application/json
 
-###
-DELETE  http://localhost:3010/tags/71
-// Delete tags row with id
+{
+    "query": "query ExampleQuery($getTagById: Float!) { getTagById(id: $getTagById) { id name }}",
+    "variables": {
+    "getTagById": 235
+  }
+}
+
+
+# ###
+# DELETE  http://localhost:3010/tags/71
+# // Delete tags row with id

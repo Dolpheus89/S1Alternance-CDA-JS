@@ -1,28 +1,24 @@
-import axios from "axios"
-import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useQuery } from "@apollo/client"
+import { GET_ALL_CATEGORIES_QUERY } from "@/graphql-queries/categories"
+
+export type Categories = {
+    id: string
+    name: string
+}
 
 const Navigation = () => {
-    const [categories, setCategories] = useState([
-        {
-            name: "",
-            id: 0,
-        },
-    ])
+    const { data, loading, error } = useQuery(GET_ALL_CATEGORIES_QUERY)
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await axios.get(
-                    "http://localhost:3010/categories/"
-                )
-                setCategories(result.data)
-            } catch (err) {
-                console.log("error", err)
-            }
-        }
-        fetchData()
-    }, [])
+    if (loading) {
+        return <p>Loading...</p>
+    }
+
+    if (error) {
+        return <p>Error : {error.message}</p>
+    }
+
+    const categories: Categories[] = [...data.getAllCategories]
 
     return (
         <nav className="categories-navigation">
