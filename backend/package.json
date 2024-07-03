@@ -1,10 +1,10 @@
 {
   "name": "the-good-corner",
   "version": "1.0.0",
-  "main": "server.ts",
+  "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node-dev --respawn ./src/server.ts",
+    "start": "ts-node-dev --respawn ./src/app.ts",
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/utils/db.ts",
     "migration:up": "typeorm-ts-node-commonjs migration:run -d src/utils/db.ts",
@@ -24,13 +24,17 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@apollo/server": "^4.10.4",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "graphql": "^16.9.0",
+    "graphql-scalars": "^1.23.0",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
+    "type-graphql": "^2.0.0-rc.1",
     "typeorm": "^0.3.20"
   }
 }

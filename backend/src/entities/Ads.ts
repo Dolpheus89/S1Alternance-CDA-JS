@@ -8,42 +8,54 @@ import {
 } from "typeorm"
 import { Categories } from "./Categories"
 import { Tags } from "./Tags"
+import { Field, ID, Int, ObjectType } from "type-graphql"
 
+@ObjectType()
 @Entity("ad")
 export class Ads {
     @PrimaryGeneratedColumn()
+    @Field(type => ID)
     id?: number
 
     @Column()
+    @Field()
     title: string
 
     @Column({ type: "text", nullable: true })
+    @Field()
     description?: string
 
     @Column()
+    @Field()
     owner: string
 
     @Column({ type: "int", default: 0 })
+    @Field(type => Int)
     price?: number
 
     @Column({ nullable: true })
+    @Field()
     picture?: string
 
     @Column({ nullable: true })
+    @Field()
     location?: string
 
     @Column({ type: "date", default: () => "CURRENT_TIMESTAMP" })
+    @Field(type => String)
     createdAt?: Date
 
-    @ManyToOne(() => Categories, (category) => category.ads)
-    category: Categories
+    @ManyToOne(() => Categories, (category) => category.ads, {eager: true})
+    @Field(type => Categories)
+    category?: Categories
 
-    @ManyToMany(() => Tags)
+    @ManyToMany(() => Tags , {eager: true})
     @JoinTable({
         name: "ad_tags",
         joinColumn: { name: "ad_id", referencedColumnName: "id" },
         inverseJoinColumn: { name: "tag_id", referencedColumnName: "id" },
     })
+    @Field(type => [Tags])
     tags?: Tags[]
 
     constructor(title: string, owner: string, category: Categories) {

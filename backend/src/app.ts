@@ -1,20 +1,34 @@
-import express from "express"
-import cors from "cors"
-import { logger } from "./middlewares/logger"
 import "./utils/db"
 import "dotenv/config"
-import adsRoutes from "./routes/adsRoutes"
-import tagsRoutes from "./routes/tagsRoutes"
-import catRoutes from "./routes/catRoutes"
+import "reflect-metadata"
+import { ApolloServer } from "@apollo/server"
+import {startStandaloneServer} from "@apollo/server/standalone"
+import { dsc, clearDB, initData } from "./utils/db"
+import { buildSchema } from "type-graphql"
+import { AdsResolvers } from "./resolvers/AdsResolvers"
 
-const app = express()
+const PORT: number =Number(process.env.BACKEND_PORT) || 3310
 
-app.use(cors())
-app.use(logger)
-app.use(express.json())
 
-app.use("/ads", adsRoutes)
-app.use("/tags", tagsRoutes)
-app.use("/categories", catRoutes)
+async function startServerApollo() {
 
-export default app
+    const schema =  await buildSchema({
+        resolvers: [AdsResolvers]
+    })
+
+    const server = new ApolloServer({
+        schema
+    })
+    
+    const {url} = await startStandaloneServer(server, {
+        listen: { port: PORT}
+    })
+
+        await dsc.initialize()
+        await clearDB()
+        await initData()
+    
+    console.log(`🚀  Server ready at: ${url}`);
+}
+
+startServerApollo()
