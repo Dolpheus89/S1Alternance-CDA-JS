@@ -1,8 +1,9 @@
 import { useRouter } from "next/router"
-import AdCard, { AdCardProps } from "../../../components/AdCard"
+import AdCard from "../../../components/AdCard"
 import { useState } from "react"
 import { useQuery } from "@apollo/client"
 import { GET_ADS_BY_CATEGORY_QUERY } from "@/graphql-queries/ads"
+import { Ads } from "@/__generated__/graphql"
 
 const FilteredByCategory = () => {
     const [total, setTotal] = useState(0)
@@ -23,7 +24,7 @@ const FilteredByCategory = () => {
         return <p>Error : {error.message}</p>
     }
 
-    const ads: AdCardProps[] = data.getAdsByCategory
+    const ads: Ads[] = data.getAdsByCategory
     return (
         <>
             <h2>{router.query.category} :</h2>

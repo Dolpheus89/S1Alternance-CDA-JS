@@ -1,48 +1,55 @@
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { useQuery } from "@apollo/client"
-import { GET_ADS_BY_ID_QUERY } from "@/graphql-queries/ads"
-
-export type AdDetailsProps = {
-    description: string | null
-    location: string | null
-    owner: string
-    price: number
-    title: string
-    picture: string
-    createdAt: string
-}
+import { useQuery, useMutation } from "@apollo/client"
+import { DELETE_AD_MUTATION, GET_ADS_BY_ID_QUERY } from "@/graphql-queries/ads"
+import { Ads } from "@/__generated__/graphql"
 
 const AdDetailComponent = () => {
     const router = useRouter()
     const [modal, setModal] = useState(false)
-    const { data, loading, error } = useQuery(GET_ADS_BY_ID_QUERY, {
+    const {
+        data: getAdData,
+        loading: getAdLoading,
+        error: getAdError,
+    } = useQuery(GET_ADS_BY_ID_QUERY, {
         variables: { id: Number(router.query.id) },
     })
 
-    // const deleteAd = async () => {
-    //     try {
-    //         await axios.delete(`http://localhost:3010/ads/${router.query.id}`)
-    //         router.push("/")
-    //     } catch (error) {
-    //         console.error("Error deleting the ad:", error)
-    //     }
-    // }
+    const [deleteAdByID, { data, loading, error }] =
+        useMutation(DELETE_AD_MUTATION)
 
-    if (loading) {
+    const deleteAd = async () => {
+        try {
+            const { data } = await deleteAdByID({
+                variables: {
+                    deleteAdId: Number(router.query.id),
+                },
+            })
+            console.log(data)
+            router.push("/")
+        } catch (error) {
+            console.error("Error deleting the ad:", error)
+        }
+    }
+
+    if (getAdLoading) {
         return <p>Loading...</p>
     }
 
-    if (error) {
-        return <p>Error : {error.message}</p>
+    if (getAdError) {
+        return <p>Error : {getAdError.message}</p>
     }
 
-    const ad: AdDetailsProps = data.getAdById[0]
+    const ad: Ads = getAdData.getAdById
+    console.log("mutation data", loading, data, error)
 
     return (
         <>
             <div id="adDetails">
-                <img src={ad.picture} alt={ad.title} />
+                <img
+                    src={ad.picture || "/shield-question.svg"}
+                    alt={ad.title}
+                />
                 <div className="content">
                     <h1>{ad.title}</h1>
                     <p>
@@ -74,7 +81,9 @@ const AdDetailComponent = () => {
                     <div id="deleteContainer">
                         <p>Voulez-vous vraiment supprimé cette annonce ?</p>
                         <div className="choice">
-                            <button className="button">Oui!</button>
+                            <button className="button" onClick={deleteAd}>
+                                Oui!
+                            </button>
                             <button
                                 className="button"
                                 onClick={() => setModal(!modal)}

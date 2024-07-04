@@ -28,9 +28,10 @@ export const createAndPersistAd = async (
     tags: Tags[],
     picture: string
 ) => {
-    const ad = new Ads(title, owner, category)
+    const ad = new Ads(title, owner)
     ad.tags = tags
     ad.picture = picture
+    ad.category = category
 
     await dsc.manager.save(ad)
 }

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write \"./src/**/*.{js,jsx,css,tsx,ts}\""
+    "format": "prettier --write \"./src/**/*.{js,jsx,css,tsx,ts}\"",
+    "generate": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.10.8",
@@ -25,6 +26,13 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/client-preset": "^4.3.2",
+    "@graphql-codegen/typescript": "^4.0.9",
+    "@graphql-codegen/typescript-graphql-request": "^6.2.0",
+    "@graphql-codegen/typescript-operations": "^4.2.3",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.0",
+    "graphql-codegen-apollo-next-ssr": "^1.7.4",
     "prettier": "3.3.2"
   }
 }

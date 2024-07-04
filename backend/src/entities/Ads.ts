@@ -1,3 +1,6 @@
+import { Categories } from "./Categories"
+import { Tags } from "./Tags"
+import { Field, ID, Int, ObjectType } from "type-graphql"
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -5,10 +8,8 @@ import {
     ManyToOne,
     ManyToMany,
     JoinTable,
+    RelationId,
 } from "typeorm"
-import { Categories } from "./Categories"
-import { Tags } from "./Tags"
-import { Field, ID, Int, ObjectType } from "type-graphql"
 
 @ObjectType()
 @Entity("ad")
@@ -49,7 +50,7 @@ export class Ads {
     @Field((type) => Categories)
     category?: Categories
 
-    @ManyToMany(() => Tags, { eager: true })
+    @ManyToMany(() => Tags, { cascade: true })
     @JoinTable({
         name: "ad_tags",
         joinColumn: { name: "ad_id", referencedColumnName: "id" },
@@ -58,9 +59,24 @@ export class Ads {
     @Field((type) => [Tags])
     tags?: Tags[]
 
-    constructor(title: string, owner: string, category: Categories) {
+    @RelationId("tags")
+    tagsIds?: number[]
+
+    constructor(
+        title: string = "",
+        description: string | undefined = undefined,
+        owner: string = "",
+        price?: number,
+        picture?: string,
+        location?: string,
+        createdAt?: Date
+    ) {
         this.title = title
+        this.description = description
         this.owner = owner
-        this.category = category
+        this.price = price
+        this.picture = picture
+        this.location = location
+        this.createdAt = createdAt
     }
 }

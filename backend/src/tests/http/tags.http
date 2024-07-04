@@ -17,8 +17,3 @@ Content-Type: application/json
     "getTagById": 235
   }
 }
-
-
-# ###
-# DELETE  http://localhost:3010/tags/71
-# // Delete tags row with id

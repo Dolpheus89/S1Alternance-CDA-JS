@@ -1,7 +1,8 @@
-import AdCard, { AdCardProps } from "./AdCard"
+import AdCard from "./AdCard"
 import { useState } from "react"
 import { useQuery } from "@apollo/client"
 import { GET_ALL_ADS_QUERY } from "@/graphql-queries/ads"
+import { Ads } from "@/__generated__/graphql"
 
 export default function RecentAds() {
     const [total, setTotal] = useState(0)
@@ -19,7 +20,7 @@ export default function RecentAds() {
         return <p>Error : {error.message}</p>
     }
 
-    const ads: AdCardProps[] = [...data.getAllAds]
+    const ads: Ads[] = [...data.getAllAds]
 
     return (
         <>

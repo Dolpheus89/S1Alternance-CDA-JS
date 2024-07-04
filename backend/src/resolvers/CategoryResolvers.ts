@@ -3,7 +3,7 @@ import { dsc } from "../utils/db"
 import { Categories } from "../entities/Categories"
 
 @Resolver(Categories)
-export class CategoriesQueries {
+export class CategoriesResolvers {
     private categoriesRepository = dsc.getRepository(Categories)
 
     @Query((type) => [Categories])
