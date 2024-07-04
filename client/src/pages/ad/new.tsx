@@ -3,16 +3,8 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { useQuery, useMutation } from "@apollo/client"
 import { GET_ALL_CATEGORIES_QUERY } from "@/graphql-queries/categories"
 import { POST_AD_MUTATION } from "@/graphql-queries/ads"
-import { Categories } from "@/components/Navigation"
-
-type formData = {
-    title: string
-    owner: string
-    category: { name: string }
-    price: number
-    location: string
-    description: string
-}
+import { Categories } from "@/__generated__/graphql"
+import { AdsInput } from "@/__generated__/graphql"
 
 const NewAD = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>("")
@@ -24,9 +16,9 @@ const NewAD = () => {
 
     const [postAd, { loading, data, error }] = useMutation(POST_AD_MUTATION)
 
-    const { register, handleSubmit, reset } = useForm<formData>()
+    const { register, handleSubmit, reset } = useForm<AdsInput>()
 
-    const onSubmit: SubmitHandler<formData> = async (data) => {
+    const onSubmit: SubmitHandler<AdsInput> = async (data) => {
         console.log("Submitting data:", data)
         try {
             const adData = {

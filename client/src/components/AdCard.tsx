@@ -1,11 +1,6 @@
-export type AdCardProps = {
-    id: string
-    picture: string
-    title: string
-    price: number
-}
+import { Ads } from "@/__generated__/graphql"
 
-const AdCard = ({ id, picture, title, price }: AdCardProps) => {
+const AdCard = ({ id, picture, title, price }: Ads) => {
     return (
         <div className="ad-card-container">
             <a className="ad-card-link" href={`/ad/${id}`}>

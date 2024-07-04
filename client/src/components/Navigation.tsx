@@ -1,11 +1,7 @@
 import Link from "next/link"
 import { useQuery } from "@apollo/client"
 import { GET_ALL_CATEGORIES_QUERY } from "@/graphql-queries/categories"
-
-export type Categories = {
-    id: string
-    name: string
-}
+import { Categories } from "@/__generated__/graphql"
 
 const Navigation = () => {
     const { data, loading, error } = useQuery(GET_ALL_CATEGORIES_QUERY)

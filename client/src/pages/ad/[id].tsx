@@ -2,16 +2,7 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { useQuery, useMutation } from "@apollo/client"
 import { DELETE_AD_MUTATION, GET_ADS_BY_ID_QUERY } from "@/graphql-queries/ads"
-
-export type AdDetailsProps = {
-    description: string | null
-    location: string | null
-    owner: string
-    price: number
-    title: string
-    picture: string
-    createdAt: string
-}
+import { Ads } from "@/__generated__/graphql"
 
 const AdDetailComponent = () => {
     const router = useRouter()
@@ -49,7 +40,7 @@ const AdDetailComponent = () => {
         return <p>Error : {getAdError.message}</p>
     }
 
-    const ad: AdDetailsProps = getAdData.getAdById
+    const ad: Ads = getAdData.getAdById
     console.log("mutation data", loading, data, error)
 
     return (
