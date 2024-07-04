@@ -4,7 +4,7 @@ import { Equal } from "typeorm"
 import { Tags } from "../entities/Tags"
 
 @Resolver(Tags)
-export class TagsQueries {
+export class TagsResolvers {
     private tagsRepository = dsc.getRepository(Tags)
 
     @Query((type) => [Tags])

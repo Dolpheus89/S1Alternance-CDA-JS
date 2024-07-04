@@ -14,13 +14,11 @@ POST http://localhost:3010/
 Content-Type: application/json
 
 {
-  "query": "query ExampleQuery($getAdByIdId: Float!) { getAdById(id: $getAdById) { id title } }",
+  "query": "query ExampleQuery($getAdById: Float!) { getAdById(id: $getAdById) { id title } }",
   "variables": {
-    "getAdById": 207
+    "getAdById": 280
   }
 }
-
-
 
 ###
 # // Get Ad by name whith query
@@ -38,7 +36,8 @@ Content-Type: application/json
 ###
 
 //Get filtered Ads by category 
-
+POST http://localhost:3010/
+Content-Type: application/json
 
 {
   "query": "query ExampleQuery( $name: String!) { getAdsByCategory(name: $name) { id title description owner price picture location createdAt category { id name } tags { id name } }}",
@@ -92,9 +91,15 @@ Content-Type: application/json
 
 # }
 
-# ###
-# DELETE http://localhost:3010/ads/21,22
+###
 # // Delete row with id
+POST http://localhost:3010/
+Content-Type: application/json
 
-# ###
+{
+  "query": "mutation Mutation($deleteAdId: Float!) { deleteAd(id: $deleteAdId)}",
+  "variables": {
+  "deleteAdId": 285
+}
+}
 
