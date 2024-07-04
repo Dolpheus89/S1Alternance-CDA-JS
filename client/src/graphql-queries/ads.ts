@@ -50,3 +50,24 @@ export const GET_ADS_BY_ID_QUERY = gql`
         }
     }
 `
+
+export const POST_AD_MUTATION = gql`
+    mutation AddAd($adData: AdsInput!) {
+        AddAd(adData: $adData) {
+            title
+            owner
+            category {
+                name
+            }
+            price
+            location
+            description
+        }
+    }
+`
+
+export const DELETE_AD_MUTATION = gql`
+    mutation deleteAd($deleteAdId: Float!) {
+        deleteAd(id: $deleteAdId)
+    }
+`

@@ -77,15 +77,15 @@ export class AdsResolvers {
     async AddAd(@Arg("adData") adData: AdsInput): Promise<Ads> {
         let category: Categories | null = null
 
-        if (adData.category && adData.category.id) {
+        if (adData.category.name) {
             category = await this.catRepository.findOneBy({
-                id: Equal(adData.category.id),
+                name: Equal(adData.category.name),
             })
-        }
 
-        if (adData.category && category == null && adData.category.name) {
-            category = new Categories(adData.category.name)
-            await this.catRepository.save(category)
+            if (category === null) {
+                category = new Categories(adData.category.name)
+                await this.catRepository.save(category)
+            }
         }
 
         if (category == null) {

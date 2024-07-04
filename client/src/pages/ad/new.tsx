@@ -1,49 +1,46 @@
-import axios from "axios"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
-
-type category = {
-    id: number
-    name: string
-}
+import { useQuery, useMutation } from "@apollo/client"
+import { GET_ALL_CATEGORIES_QUERY } from "@/graphql-queries/categories"
+import { POST_AD_MUTATION } from "@/graphql-queries/ads"
+import { Categories } from "@/components/Navigation"
 
 type formData = {
     title: string
     owner: string
-    category: string
+    category: { name: string }
     price: number
     location: string
     description: string
 }
 
 const NewAD = () => {
-    const [categories, setCategories] = useState<category[]>([])
     const [selectedCategory, setSelectedCategory] = useState<string>("")
+    const {
+        data: categoriesResult,
+        loading: categoriesLoading,
+        error: categoriesError,
+    } = useQuery(GET_ALL_CATEGORIES_QUERY)
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            const result = await axios.get<category[]>(
-                "http://localhost:3010/categories/"
-            )
-            setCategories(result.data)
-        }
-        fetchCategories()
-    }, [])
+    const [postAd, { loading, data, error }] = useMutation(POST_AD_MUTATION)
 
     const { register, handleSubmit, reset } = useForm<formData>()
 
     const onSubmit: SubmitHandler<formData> = async (data) => {
+        console.log("Submitting data:", data)
         try {
-            const response = await axios.post(
-                "http://localhost:3010/ads/",
-                data,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            )
-            console.log(response, data)
+            const adData = {
+                ...data,
+                price: Number(data.price),
+                category: { name: data.category },
+            }
+            const response = await postAd({
+                variables: {
+                    adData,
+                },
+            })
+
+            console.log(response)
         } catch (err) {
             console.error("Error:", err)
         }
@@ -56,6 +53,17 @@ const NewAD = () => {
 
         setSelectedCategory(e.target.value)
     }
+
+    if (categoriesLoading) {
+        return <p>Loading...</p>
+    }
+
+    if (categoriesError) {
+        return <p>Error : {categoriesError.message}</p>
+    }
+
+    console.log("mutation data", loading, data, error)
+    const categories: Categories[] = categoriesResult.getAllCategories
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} id="newAd">
@@ -94,7 +102,9 @@ const NewAD = () => {
                         className="text-field"
                         onChange={selectCategories}
                     >
-                        <option selected></option>
+                        <option value="..." disabled>
+                            Choose a category
+                        </option>
                         {categories.map((el) => (
                             <option value={el.name} key={el.id}>
                                 {el.name}

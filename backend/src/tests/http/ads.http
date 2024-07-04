@@ -60,19 +60,24 @@ Content-Type: application/json
 }
 
 
-# ###
-# POST http://localhost:3010/ads/
-# Content-Type: application/json
+###
+POST http://localhost:3010/
+Content-Type: application/json
 
-# {
-#     "title": "Le Saint Graal des canapés",
-#     "description": "Ce canapé a été béni par le Pape lui-même et a des pouvoirs de guérison. Il est également incroyablement confortable et parfait pour les soirées Netflix.",
-#     "price": 1000000,
-#     "picture": "saint-graal-canape.jpg",
-#     "location": "Vatican City",
-#     "category": "catapulte",
-#     "tags":"toutou"
-# }
+{
+  "query": "mutation AddAd($adData: AdsInput!) { AddAd(adData: $adData) { id title description category { name id } }}",
+  "variables": {
+      "adData": {
+        "title": "coucou",
+        "owner": "Florian",
+        "description": "j'aime les poulet",
+        "category": {
+          "name": "poulet de bois"
+        }
+      }
+    }
+}
+
 
 # ###
 
