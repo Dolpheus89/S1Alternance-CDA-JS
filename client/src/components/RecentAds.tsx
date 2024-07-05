@@ -1,12 +1,11 @@
 import AdCard from "./AdCard"
 import { useState } from "react"
-import { useQuery } from "@apollo/client"
-import { GET_ALL_ADS_QUERY } from "@/graphql-queries/ads"
-import { Ads } from "@/__generated__/graphql"
+import { useGetAllAdsQuery } from "@/__generated__/graphql"
+import { AdCardProps } from "./AdCard"
 
 export default function RecentAds() {
     const [total, setTotal] = useState(0)
-    const { data, loading, error } = useQuery(GET_ALL_ADS_QUERY)
+    const { data, loading, error } = useGetAllAdsQuery()
 
     const addPrice = (price: number) => {
         setTotal(total! + price)
@@ -16,11 +15,11 @@ export default function RecentAds() {
         return <p>Loading...</p>
     }
 
-    if (error) {
-        return <p>Error : {error.message}</p>
+    if (error || !data) {
+        return <p>Error : {error ? error.message : "No Data available"}</p>
     }
 
-    const ads: Ads[] = [...data.getAllAds]
+    const ads: AdCardProps[] = [...data.getAllAds]
 
     return (
         <>

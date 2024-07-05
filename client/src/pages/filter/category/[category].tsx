@@ -1,15 +1,13 @@
 import { useRouter } from "next/router"
-import AdCard from "../../../components/AdCard"
+import AdCard, { AdCardProps } from "../../../components/AdCard"
 import { useState } from "react"
-import { useQuery } from "@apollo/client"
-import { GET_ADS_BY_CATEGORY_QUERY } from "@/graphql-queries/ads"
-import { Ads } from "@/__generated__/graphql"
+import { useGetAdsByCategoryQuery } from "@/__generated__/graphql"
 
 const FilteredByCategory = () => {
     const [total, setTotal] = useState(0)
     const router = useRouter()
-    const { data, loading, error } = useQuery(GET_ADS_BY_CATEGORY_QUERY, {
-        variables: { name: router.query.category },
+    const { data, loading, error } = useGetAdsByCategoryQuery({
+        variables: { name: router.query.category as string },
     })
 
     const addPrice = (price: number) => {
@@ -20,11 +18,11 @@ const FilteredByCategory = () => {
         return <p>Loading...</p>
     }
 
-    if (error) {
-        return <p>Error : {error.message}</p>
+    if (error || !data) {
+        return <p>Error : {error ? error.message : "No Data available"}</p>
     }
 
-    const ads: Ads[] = data.getAdsByCategory
+    const ads: AdCardProps[] = data.getAdsByCategory
     return (
         <>
             <h2>{router.query.category} :</h2>

@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
-import { useQuery, useMutation } from "@apollo/client"
-import { GET_ALL_CATEGORIES_QUERY } from "@/graphql-queries/categories"
-import { POST_AD_MUTATION } from "@/graphql-queries/ads"
-import { Categories } from "@/__generated__/graphql"
+import {
+    useAddAdMutation,
+    useGetAllCategoriesQuery,
+} from "@/__generated__/graphql"
 import { AdsInput } from "@/__generated__/graphql"
+import { displayCategories } from "@/components/Navigation"
 
 const NewAD = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>("")
@@ -12,19 +13,19 @@ const NewAD = () => {
         data: categoriesResult,
         loading: categoriesLoading,
         error: categoriesError,
-    } = useQuery(GET_ALL_CATEGORIES_QUERY)
+    } = useGetAllCategoriesQuery()
 
-    const [postAd, { loading, data, error }] = useMutation(POST_AD_MUTATION)
+    const [postAd, { loading, data, error }] = useAddAdMutation()
 
     const { register, handleSubmit, reset } = useForm<AdsInput>()
 
     const onSubmit: SubmitHandler<AdsInput> = async (data) => {
         console.log("Submitting data:", data)
         try {
-            const adData = {
+            const adData: AdsInput = {
                 ...data,
                 price: Number(data.price),
-                category: { name: data.category },
+                category: { name: data.category as string },
             }
             const response = await postAd({
                 variables: {
@@ -50,12 +51,19 @@ const NewAD = () => {
         return <p>Loading...</p>
     }
 
-    if (categoriesError) {
-        return <p>Error : {categoriesError.message}</p>
+    if (categoriesError || !categoriesResult) {
+        return (
+            <p>
+                Error:{" "}
+                {categoriesError
+                    ? categoriesError.message
+                    : "No Data available"}
+            </p>
+        )
     }
 
     console.log("mutation data", loading, data, error)
-    const categories: Categories[] = categoriesResult.getAllCategories
+    const categories: displayCategories[] = categoriesResult.getAllCategories
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} id="newAd">
