@@ -36,7 +36,7 @@ export class AdsResolvers {
 
     @Query((type) => [Ads])
     async getAllAds(): Promise<Ads[]> {
-        return await this.adsRepository.find()
+        return (await this.adsRepository.find()) || []
     }
 
     @Query((type) => Ads, { nullable: true })

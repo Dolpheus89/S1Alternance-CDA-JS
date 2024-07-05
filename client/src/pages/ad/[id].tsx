@@ -1,8 +1,17 @@
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { useQuery, useMutation } from "@apollo/client"
-import { DELETE_AD_MUTATION, GET_ADS_BY_ID_QUERY } from "@/graphql-queries/ads"
-import { Ads } from "@/__generated__/graphql"
+import { useDeleteAdMutation, useGetAdByIdQuery } from "@/__generated__/graphql"
+
+export type AdDetailsProps = {
+    id: string
+    title: string
+    owner: string
+    description?: string | null
+    location?: string | null
+    price: number
+    picture?: string | null
+    createdAt: string | number
+}
 
 const AdDetailComponent = () => {
     const router = useRouter()
@@ -11,12 +20,11 @@ const AdDetailComponent = () => {
         data: getAdData,
         loading: getAdLoading,
         error: getAdError,
-    } = useQuery(GET_ADS_BY_ID_QUERY, {
+    } = useGetAdByIdQuery({
         variables: { id: Number(router.query.id) },
     })
 
-    const [deleteAdByID, { data, loading, error }] =
-        useMutation(DELETE_AD_MUTATION)
+    const [deleteAdByID, { data, loading, error }] = useDeleteAdMutation()
 
     const deleteAd = async () => {
         try {
@@ -36,11 +44,16 @@ const AdDetailComponent = () => {
         return <p>Loading...</p>
     }
 
-    if (getAdError) {
-        return <p>Error : {getAdError.message}</p>
+    if (getAdError || !getAdData) {
+        return (
+            <p>
+                Error: {getAdError ? getAdError.message : "No Data available"}
+            </p>
+        )
     }
 
-    const ad: Ads = getAdData.getAdById
+    const ad: AdDetailsProps = getAdData.getAdById!
+
     console.log("mutation data", loading, data, error)
 
     return (
@@ -57,7 +70,7 @@ const AdDetailComponent = () => {
                     </p>
                     <p>
                         <strong>Created At:</strong>{" "}
-                        {new Date(ad.createdAt).toLocaleString()}
+                        {new Date(ad.createdAt).toLocaleString() || ""}
                     </p>
                     <p>
                         <strong>Description:</strong>{" "}

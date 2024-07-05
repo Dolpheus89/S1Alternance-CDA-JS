@@ -1,15 +1,13 @@
-import { useQuery } from "@apollo/client"
-import AdCard from "../../../components/AdCard"
+import AdCard, { AdCardProps } from "../../../components/AdCard"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { GET_ADS_BY_TITLE_QUERY } from "@/graphql-queries/ads"
-import { Ads } from "@/__generated__/graphql"
+import { useGetAdsByTitleQuery } from "@/__generated__/graphql"
 
 const SearchPage = () => {
     const router = useRouter()
     const [total, setTotal] = useState(0)
-    const { data, loading, error } = useQuery(GET_ADS_BY_TITLE_QUERY, {
-        variables: { title: router.query.search },
+    const { data, loading, error } = useGetAdsByTitleQuery({
+        variables: { title: router.query.title as string },
     })
     const addPrice = (price: number) => {
         setTotal(total! + price)
@@ -19,11 +17,12 @@ const SearchPage = () => {
         return <p>Loading...</p>
     }
 
-    if (error) {
-        return <p>Error : {error.message}</p>
+    if (error || !data) {
+        return <p>Error : {error ? error.message : "No Data available"}</p>
     }
 
-    const ads: Ads[] = [...data.getAdByTitle]
+    const ads: AdCardProps[] = [...data.getAdByTitle]
+
     return (
         <>
             <h2>Resultat de la recherche "{router.query.search}"</h2>

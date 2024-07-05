@@ -5,7 +5,7 @@ POST http://localhost:3010/
 Content-Type: application/json
 
 {
-    "query": "query QueryAllAds { getAllAds { title createdAt category { name } tags { name } } }"
+    "query": "query QueryAllAds { getAllAds {  id title createdAt category { name } tags { name } } }"
 }
 
 ###
@@ -104,7 +104,7 @@ Content-Type: application/json
 {
   "query": "mutation Mutation($deleteAdId: Float!) { deleteAd(id: $deleteAdId)}",
   "variables": {
-  "deleteAdId": 285
+  "deleteAdId": 336
 }
 }
 

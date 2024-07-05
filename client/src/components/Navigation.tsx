@@ -1,20 +1,23 @@
 import Link from "next/link"
-import { useQuery } from "@apollo/client"
-import { GET_ALL_CATEGORIES_QUERY } from "@/graphql-queries/categories"
-import { Categories } from "@/__generated__/graphql"
+import { useGetAllCategoriesQuery } from "@/__generated__/graphql"
+
+export type displayCategories = {
+    id: string
+    name: string
+}
 
 const Navigation = () => {
-    const { data, loading, error } = useQuery(GET_ALL_CATEGORIES_QUERY)
+    const { data, loading, error } = useGetAllCategoriesQuery()
 
     if (loading) {
         return <p>Loading...</p>
     }
 
-    if (error) {
-        return <p>Error : {error.message}</p>
+    if (error || !data) {
+        return <p>Error : {error ? error.message : "No Data available"}</p>
     }
 
-    const categories: Categories[] = [...data.getAllCategories]
+    const categories: displayCategories[] = [...data.getAllCategories]
 
     return (
         <nav className="categories-navigation">
