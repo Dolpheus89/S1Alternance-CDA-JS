@@ -1,25 +1,36 @@
-import sqlite3 from "sqlite3"
 import { DataSource } from "typeorm"
 import { Ads } from "../entities/Ads"
 import { Categories } from "../entities/Categories"
 import { Tags } from "../entities/Tags"
 
-sqlite3.verbose()
-
 export const dsc = new DataSource({
-    type: "sqlite",
-    database: "src/utils/good_corner.sqlite",
+    type: "postgres",
+    host: "db",
+    port:5432,
+    database: "the_good_corner",
+    username: 'postgres',
+    password: "example",
+
     entities: ["src/entities/*.ts"],
-    synchronize: false,
+    synchronize: true,
     migrations: ["migrations/*.ts"],
     migrationsTableName: "migrations",
 })
 
 export const clearDB = async () => {
-    await dsc.manager.clear(Ads)
-    await dsc.manager.clear(Categories)
-    await dsc.manager.clear(Tags)
-}
+    const connection = dsc.manager.connection;
+
+    await connection.query("SET session_replication_role = 'replica'");
+
+    try {
+        await connection.query('TRUNCATE TABLE ad CASCADE');
+        await connection.query('TRUNCATE TABLE categories CASCADE');
+        await connection.query('TRUNCATE TABLE tags CASCADE');
+    } finally {
+        await connection.query("SET session_replication_role = 'origin'");
+    }
+};
+
 
 export const createAndPersistAd = async (
     title: string,

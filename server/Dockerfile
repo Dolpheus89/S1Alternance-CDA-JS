@@ -5,6 +5,6 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm i
-COPY src src
+COPY . .
 
 CMD npm run start

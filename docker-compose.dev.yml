@@ -1,5 +1,11 @@
 services:
 
+  back:
+    build: ./server
+    restart: unless-stopped
+    ports:
+      - 3310:3310  
+
   db:
     image: postgres:16
     restart: unless-stopped
@@ -13,6 +19,8 @@ services:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
       POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432  
 
   adminer:
     image: adminer
