@@ -17,6 +17,8 @@ services:
       - db
     volumes:
       - ./server:/app
+    environment:
+      THEGOODCORNER_DBPASS: ${DBPASS}
 
   db:
     image: postgres:16
@@ -30,7 +32,7 @@ services:
     #    tmpfs:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
-      POSTGRES_PASSWORD: example
+      THEGOODCORNER_DBPASS_ADMIN: ${DBPASS_ADMIN}
     ports:
       - 5432:5432  
     volumes:
