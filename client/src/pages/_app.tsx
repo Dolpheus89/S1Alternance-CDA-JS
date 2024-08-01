@@ -8,8 +8,7 @@ import dynamic from "next/dynamic"
 import {
     ApolloClient,
     InMemoryCache,
-    ApolloProvider,
-    gql,
+    ApolloProvider
 } from "@apollo/client"
 
 const client = new ApolloClient({

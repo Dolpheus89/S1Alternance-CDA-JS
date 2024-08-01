@@ -3,7 +3,7 @@ import "dotenv/config"
 import "reflect-metadata"
 import { ApolloServer } from "@apollo/server"
 import { startStandaloneServer } from "@apollo/server/standalone"
-import { dsc, clearDB, initData } from "./utils/db"
+import { dsc } from "./utils/db"
 import { buildSchema } from "type-graphql"
 import { AdsResolvers } from "./resolvers/AdsResolvers"
 import { TagsResolvers } from "./resolvers/TagsResolvers"
@@ -25,8 +25,6 @@ async function startServerApollo() {
     })
 
     await dsc.initialize()
-    await clearDB()
-    await initData()
 
     console.log(`🚀  Server ready at: ${url}`)
 }

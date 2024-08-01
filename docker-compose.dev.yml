@@ -1,10 +1,22 @@
 services:
 
+  front:
+    build: ./client
+    restart: unless-stopped
+    ports:
+      - 3000:3000  
+    volumes:
+      - ./client:/webapp
+
   back:
     build: ./server
     restart: unless-stopped
     ports:
       - 3310:3310  
+    depends_on:
+      - db
+    volumes:
+      - ./server:/app
 
   db:
     image: postgres:16
@@ -21,6 +33,8 @@ services:
       POSTGRES_PASSWORD: example
     ports:
       - 5432:5432  
+    volumes:
+      - ./data:/var/lib/postgresql/data
 
   adminer:
     image: adminer
