@@ -1,0 +1,49 @@
+// Get ALL User
+POST http://localhost:3310/
+Content-Type: application/json
+
+{
+    "query": "query QueryAllUsers { getAllUsers { id email role } }"
+}
+
+###
+// Get user with id
+POST http://localhost:3310/
+Content-Type: application/json
+
+{
+    "query": "query GetUserById($getUserById: Float!) { getUserById(id: $getUserById) { id email role } }",
+    "variables": {
+    "getUserById": 1
+  }
+}
+
+### 
+// POST user
+//Create user
+POST http://localhost:3310/
+Content-Type: application/json
+
+{
+    "query": "mutation CreateUser($role: String!, $password: String!, $email: String!) { createUser(role: $role, password: $password, email: $email) { id role email }}",
+    "variables": {
+    "email": "moi@superdev.com",
+    "password":"toto",
+    "role":"USER"
+  }
+}
+
+### 
+// POST user
+//login
+POST http://localhost:3310/
+Content-Type: application/json
+
+{
+    "query": "query login($password: String!, $email: String!) { login( email: $email, password: $password)}",
+    "variables": {
+    "email": "moi@superdev.com",
+    "password":"toto"
+  }
+}
+

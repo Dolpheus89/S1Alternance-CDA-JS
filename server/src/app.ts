@@ -8,12 +8,13 @@ import { buildSchema } from "type-graphql"
 import { AdsResolvers } from "./resolvers/AdsResolvers"
 import { TagsResolvers } from "./resolvers/TagsResolvers"
 import { CategoriesResolvers } from "./resolvers/CategoryResolvers"
+import { UserResolvers } from "./resolvers/UsersResolvers"
 
 const PORT: number = Number(process.env.BACKEND_PORT) || 3310
 
 async function startServerApollo() {
     const schema = await buildSchema({
-        resolvers: [AdsResolvers, TagsResolvers, CategoriesResolvers],
+        resolvers: [AdsResolvers, TagsResolvers, CategoriesResolvers, UserResolvers],
     })
 
     const server = new ApolloServer({

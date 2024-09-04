@@ -1,5 +1,4 @@
 import { Field, ID, InputType, Int } from "type-graphql"
-import { Tags } from "../Tags"
 
 @InputType()
 export class CategoryInput {

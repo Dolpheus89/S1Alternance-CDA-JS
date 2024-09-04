@@ -5,7 +5,7 @@ export const dsc = new DataSource({
     host: "db",
     port:5432,
     database: "the_good_corner",
-    username: 'the_good_corner_user',
+    username: process.env.THEGOODCORNER_DBUSER,
     password: process.env.THEGOODCORNER_DBPASS,
 
     entities: ["src/entities/*.ts"],
@@ -13,4 +13,3 @@ export const dsc = new DataSource({
     migrations: ["migrations/*.ts"],
     migrationsTableName: "migrations",
 })
-
