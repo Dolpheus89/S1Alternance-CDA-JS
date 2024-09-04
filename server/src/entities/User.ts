@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm"
 import { ObjectType, Field, ID } from "type-graphql"
 
 @ObjectType()
 @Entity()
+@Unique(["email"])
 export class User {
     @PrimaryGeneratedColumn()
     @Field((type) => ID)

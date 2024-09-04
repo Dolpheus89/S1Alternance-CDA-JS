@@ -5,6 +5,7 @@ import {
     FieldResolver,
     Root,
     Mutation,
+    Authorized,
 } from "type-graphql"
 import { dsc } from "../utils/db"
 import { Ads } from "../entities/Ads"
@@ -34,6 +35,7 @@ export class AdsResolvers {
     private adsRepository = dsc.getRepository(Ads)
     private catRepository = dsc.getRepository(Categories)
 
+    @Authorized("ADMIN", "USER")
     @Query((type) => [Ads])
     async getAllAds(): Promise<Ads[]> {
         return (await this.adsRepository.find()) || []

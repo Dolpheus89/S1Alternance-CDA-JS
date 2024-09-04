@@ -36,14 +36,19 @@ export class UserResolvers {
     async login(@Arg("email") email: string, @Arg("password") password: string) : Promise<string> {
         console.log("login attempt: " + email);
 
-        const user = await this.userRepository.findOneOrFail({
+        const user : User = await this.userRepository.findOneOrFail({
             where: {
                 email
             }
         })
+        
+        const isValid: boolean = await argon2.verify(user.passwordHashed,password)
+
+        if(!isValid){
+            throw new Error('email or password is incorrect')
+        }
 
         const jwtSecret: string | undefined = process.env.JWT_SECRET
-        console.log('jwt Secret' + jwtSecret);
 
         if(!jwtSecret) {
             throw new Error('invalid JWT secret')

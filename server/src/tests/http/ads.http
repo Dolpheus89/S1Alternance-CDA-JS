@@ -1,8 +1,9 @@
 //Use "REST Client" and SQLite Extensions for this file.
 
 // Get ALL ads
-POST http://localhost:3010/
+POST http://localhost:3310/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vaUBzdXBlcmRldi5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTcyNTQ1NzY4MH0.RVo7l8_TXO_8FTvuavACVohBemDi-jsjVdGNw1KdhIM
 
 {
     "query": "query QueryAllAds { getAllAds {  id title createdAt category { name } tags { name } } }"
@@ -10,7 +11,7 @@ Content-Type: application/json
 
 ###
 // Get ad with id
-POST http://localhost:3010/
+POST http://localhost:3310/
 Content-Type: application/json
 
 {
